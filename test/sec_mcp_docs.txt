@@ -1,0 +1,345 @@
+Available tools:
+
+
+get_cik_by_ticker
+
+    Get the CIK (Central Index Key) for a company based on its ticker symbol.
+
+    Args:
+        ticker: The ticker symbol of the company (e.g., "NVDA", "AAPL")
+
+    Returns:
+        Dictionary containing the CIK number or error message
+    
+{'properties': {'ticker': {'title': 'Ticker', 'type': 'string'}}, 'required': ['ticker'], 'title': 'get_cik_by_tickerArguments', 'type': 'object'}
+--------------------------------------------------
+get_company_info
+
+    Get detailed information about a company from SEC records.
+
+    CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
+    - ONLY use data returned from SEC records. NEVER add external information.
+    - ALWAYS include any filing reference information if provided.
+    - Be completely deterministic - same query should always give same response.
+    - If information is not in SEC records, say "Not available in SEC records".
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+
+    Returns:
+        Dictionary containing company information from SEC records including name, CIK, SIC, exchange, etc.
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}}, 'required': ['identifier'], 'title': 'get_company_infoArguments','type': 'object'}
+--------------------------------------------------
+search_companies
+
+    Search for companies by name.
+
+    Args:
+        query: Search query for company name
+        limit: Maximum number of results to return (default: 10)
+
+    Returns:
+        Dictionary containing list of matching companies
+    
+{'properties': {'query': {'title': 'Query', 'type': 'string'}, 'limit': {'default': 10, 'title': 'Limit', 'type': 'integer'}}, 'required': ['query'], 'title': 'search_companiesArguments', 'type': 'object'}
+--------------------------------------------------
+get_company_facts
+
+    Get company facts and key financial metrics.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+
+    Returns:
+        Dictionary containing available financial metrics
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}}, 'required': ['identifier'], 'title': 'get_company_factsArguments', 'type': 'object'}
+--------------------------------------------------
+get_recent_filings
+
+    Get recent SEC filings for a company or across all companies.
+
+    Args:
+        identifier: Company ticker/CIK (optional, if not provided returns all recent filings)
+        form_type: Specific form type to filter (e.g., "10-K", "10-Q", "8-K")
+        days: Number of days to look back (default: 30)
+        limit: Maximum number of filings to return (default: 50)
+
+    Returns:
+        Dictionary containing list of recent filings
+    
+{'properties': {'identifier': {'default': None, 'title': 'Identifier', 'type': 'string'}, 'form_type': {'default': None, 'title': 'Form Type', 'type': 'string'}, 'days': {'default': 30, 'title': 'Days', 'type': 'integer'}, 'limit': {'default': 40, 'title': 'Limit', 'type': 'integer'}}, 'title': 'get_recent_filingsArguments', 'type': 'object'}
+--------------------------------------------------
+get_filing_content
+
+    Get the content of a specific SEC filing.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        accession_number: The accession number of the filing
+
+    Returns:
+        Dictionary containing filing content and metadata
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'accession_number': {'title': 'Accession Number', 'type': 'string'}}, 'required': ['identifier', 'accession_number'], 'title': 'get_filing_contentArguments', 'type': 'object'}
+--------------------------------------------------
+analyze_8k
+
+    Analyze an 8-K filing for specific events and items.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        accession_number: The accession number of the 8-K filing
+
+    Returns:
+        Dictionary containing analysis of 8-K items and events
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'accession_number': {'title': 'Accession Number', 'type': 'string'}}, 'required': ['identifier', 'accession_number'], 'title': 'analyze_8kArguments', 'type': 'object'}
+--------------------------------------------------
+get_filing_sections
+
+    Get specific sections from a filing (e.g., business description, risk factors, MD&A).
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        accession_number: The accession number of the filing
+        form_type: The type of form (e.g., "10-K", "10-Q")
+
+    Returns:
+        Dictionary containing available sections from the filing
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'accession_number': {'title': 'Accession Number', 'type': 'string'}, 'form_type': {'title': 'Form Type', 'type': 'string'}}, 'required': ['identifier', 'accession_number', 'form_type'], 'title': 'get_filing_sectionsArguments', 'type': 'object'}
+--------------------------------------------------
+get_financials
+
+    Get financial statements for a company. USE THIS TOOL when users ask for:
+    - Cash flow, cash flow statement, operating cash flow, investing cash flow, financing cash flow
+    - Income statement, revenue, net income, earnings, profit/loss, operating income
+    - Balance sheet, assets, liabilities, equity, cash and cash equivalents
+    - Any financial statement data or financial metrics
+
+    CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
+    - ONLY use data from the returned SEC filing. NEVER add external information.
+    - ALWAYS include the filing reference information with clickable SEC URL in your response.
+    - NEVER estimate, calculate, or interpret data beyond what is explicitly in the filing.
+    - PRESERVE EXACT NUMERIC PRECISION - NO ROUNDING! Show exact values like $37,044,000,000 not $37.0B.
+    - ALWAYS state the exact filing date and form type when presenting data.
+    - Be completely deterministic - same query should always give same response.
+    - If data is not in the filing, say "Not available in this filing" - DO NOT guess.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        statement_type: Type of statement ("income", "balance", "cash", or "all")
+
+    Returns:
+        Dictionary containing financial statement data extracted directly from SEC EDGAR filings,
+        including filing_reference with source URLs and disclaimer.
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'statement_type': {'default': 'all', 'title': 'Statement Type', 'type': 'string'}}, 'required': ['identifier'], 'title': 'get_financialsArguments', 'type': 'object'}
+--------------------------------------------------
+get_segment_data
+
+    Get revenue breakdown by segments (geographic, product, etc.).
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        segment_type: Type of segment analysis (default: "geographic")
+
+    Returns:
+        Dictionary containing segment revenue data
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'segment_type': {'default': 'geographic', 'title': 'Segment Type','type': 'string'}}, 'required': ['identifier'], 'title': 'get_segment_dataArguments', 'type': 'object'}
+--------------------------------------------------
+get_key_metrics
+
+    Get key financial metrics for a company.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        metrics: List of specific metrics to retrieve (optional)
+
+    Returns:
+        Dictionary containing requested financial metrics
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'metrics': {'default': None, 'items': {}, 'title': 'Metrics', 'type': 'array'}}, 'required': ['identifier'], 'title': 'get_key_metricsArguments', 'type': 'object'}
+--------------------------------------------------
+compare_periods
+
+    Compare a financial metric across different time periods.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        metric: The financial metric to compare (e.g., "Revenues", "NetIncomeLoss")
+        start_year: Starting year for comparison
+        end_year: Ending year for comparison
+
+    Returns:
+        Dictionary containing period comparison data and growth analysis
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'metric': {'title': 'Metric', 'type': 'string'}, 'start_year': {'title': 'Start Year', 'type': 'integer'}, 'end_year': {'title': 'End Year', 'type': 'integer'}}, 'required': ['identifier', 'metric', 'start_year', 'end_year'], 'title': 'compare_periodsArguments', 'type': 'object'}
+--------------------------------------------------
+discover_company_metrics
+
+    Discover available financial metrics for a company.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        search_term: Optional search term to filter metrics
+
+    Returns:
+        Dictionary containing list of available metrics
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'search_term': {'default': None, 'title': 'Search Term', 'type': 'string'}}, 'required': ['identifier'], 'title': 'discover_company_metricsArguments', 'type': 'object'}
+--------------------------------------------------
+get_xbrl_concepts
+
+    ADVANCED TOOL: Extract specific XBRL concepts from a filing.
+
+    DO NOT USE for general financial data requests. Use get_financials() instead for:
+    - Cash flow statements, income statements, balance sheets
+    - Revenue, net income, assets, liabilities, cash data
+
+    CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
+    - ONLY report values found in the specific SEC filing. NEVER add context from other sources.
+    - ALWAYS include the filing reference information with clickable SEC URL (date, accession number, SEC URL).
+    - NEVER estimate or calculate values not explicitly present in the filing.
+    - PRESERVE EXACT NUMERIC PRECISION - NO ROUNDING! Show exact values like $37,044,000,000 not $37.0B.
+    - ALWAYS specify the exact period/context for each value from the filing.
+    - Be completely deterministic - identical queries must give identical responses.
+    - If a concept is not found in the filing, state "Not found in this filing" - DO NOT guess.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        accession_number: Optional specific filing accession number
+        concepts: Optional list of specific concepts to extract (e.g., ["Revenues", "Assets"])
+        form_type: Form type if no accession number provided (default: "10-K")
+
+    Returns:
+        Dictionary containing extracted XBRL concepts with filing_reference and source URLs.
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'accession_number': {'default': None, 'title': 'Accession Number','type': 'string'}, 'concepts': {'default': None, 'items': {}, 'title': 'Concepts', 'type': 'array'}, 'form_type': {'default': '10-K', 'title': 'Form Type', 'type': 'string'}}, 'required': ['identifier'], 'title': 'get_xbrl_conceptsArguments', 'type': 'object'}
+--------------------------------------------------
+discover_xbrl_concepts
+
+    Discover all available XBRL concepts in a filing, including company-specific ones.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        accession_number: Optional specific filing accession number
+        form_type: Form type if no accession number provided (default: "10-K")
+        namespace_filter: Optional filter to show only concepts from specific namespace
+
+    Returns:
+        Dictionary containing all discovered XBRL concepts, namespaces, and company-specific tags
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'accession_number': {'default': None, 'title': 'Accession Number','type': 'string'}, 'form_type': {'default': '10-K', 'title': 'Form Type', 'type': 'string'}, 'namespace_filter': {'default': None, 'title':'Namespace Filter', 'type': 'string'}}, 'required': ['identifier'], 'title': 'discover_xbrl_conceptsArguments', 'type': 'object'}
+--------------------------------------------------
+get_insider_transactions
+
+    Get insider trading transactions for a company from SEC filings.
+
+    CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
+    - ONLY use data from the returned SEC insider filings. NEVER add external information.
+    - ALWAYS include the filing reference information with clickable SEC URLs in your response.
+    - NEVER estimate or calculate values not explicitly present in the filings.
+    - PRESERVE EXACT DATES AND VALUES - NO ROUNDING! Show exact values from filings.
+    - ALWAYS specify the exact filing date and accession number for each transaction.
+    - Be completely deterministic - same query should always give same response.
+    - If data is not in the filing, say "Not available in this filing" - DO NOT guess.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        form_types: List of form types to include (default: ["3", "4", "5"])
+        days: Number of days to look back (default: 90)
+        limit: Maximum number of transactions to return (default: 50)
+
+    Returns:
+        Dictionary containing insider transactions with direct SEC URLs for verification
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'form_types': {'default': None, 'items': {}, 'title': 'Form Types', 'type': 'array'}, 'days': {'default': 90, 'title': 'Days', 'type': 'integer'}, 'limit': {'default': 50, 'title': 'Limit', 'type': 'integer'}}, 'required': ['identifier'], 'title': 'get_insider_transactionsArguments', 'type': 'object'}
+--------------------------------------------------
+get_insider_summary
+
+    Get a summary of insider trading activity for a company from SEC filings.
+
+    CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
+    - ONLY use data from the returned SEC insider filings. NEVER add external information.
+    - ALWAYS include the filing reference information with SEC URLs in your response.
+    - PRESERVE EXACT COUNTS AND DATES - NO ROUNDING OR ESTIMATES!
+    - Be completely deterministic - same query should always give same response.
+    - If data is not in the filing, say "Not available in filings" - DO NOT guess.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        days: Number of days to analyze (default: 180)
+
+    Returns:
+        Dictionary containing insider trading summary from SEC filings
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'days': {'default': 180, 'title': 'Days', 'type': 'integer'}}, 'required': ['identifier'], 'title': 'get_insider_summaryArguments', 'type': 'object'}
+--------------------------------------------------
+get_form4_details
+
+    Get detailed information from a specific Form 4 filing.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        accession_number: The accession number of the Form 4
+
+    Returns:
+        Dictionary containing detailed Form 4 information
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'accession_number': {'title': 'Accession Number', 'type': 'string'}}, 'required': ['identifier', 'accession_number'], 'title': 'get_form4_detailsArguments', 'type': 'object'}
+--------------------------------------------------
+analyze_form4_transactions
+
+    Analyze Form 4 filings and extract detailed transaction data including insider names,
+    transaction amounts, share counts, prices, and ownership details.
+
+    USE THIS TOOL when users ask for detailed insider transaction analysis, transaction tables,
+    or specific transaction amounts from Form 4 filings.
+
+    CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
+    - ONLY use data from the returned SEC Form 4 filings. NEVER add external information.
+    - ALWAYS include the filing reference information with clickable SEC URLs.
+    - PRESERVE EXACT NUMERIC VALUES - NO ROUNDING! Show exact share counts and prices.
+    - ALWAYS specify the exact filing date and accession number for each transaction.
+    - Present data in table format when requested by users.
+    - Be completely deterministic - same query should always give same response.
+    - If data is not in the filing, say "Not available in this filing" - DO NOT guess.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        days: Number of days to look back (default: 90)
+        limit: Maximum number of filings to analyze (default: 50)
+
+    Returns:
+        Dictionary containing detailed Form 4 transaction analysis with exact values from SEC filings
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'days': {'default': 90, 'title': 'Days', 'type': 'integer'}, 'limit': {'default': 50, 'title': 'Limit', 'type': 'integer'}}, 'required': ['identifier'], 'title': 'analyze_form4_transactionsArguments', 'type': 'object'}
+--------------------------------------------------
+analyze_insider_sentiment
+
+    Analyze insider trading sentiment and trends over time.
+
+    Args:
+        identifier: Company ticker symbol or CIK number
+        months: Number of months to analyze (default: 6)
+
+    Returns:
+        Dictionary containing sentiment analysis and trends
+    
+{'properties': {'identifier': {'title': 'Identifier', 'type': 'string'}, 'months': {'default': 6, 'title': 'Months', 'type': 'integer'}}, 'required': ['identifier'], 'title': 'analyze_insider_sentimentArguments', 'type': 'object'}
+--------------------------------------------------
+get_recommended_tools
+
+    Get recommended tools for analyzing specific form types.
+
+    Args:
+        form_type: The SEC form type (e.g., "10-K", "8-K", "4")
+
+    Returns:
+        Dictionary containing recommended tools and usage tips
+    
+{'properties': {'form_type': {'title': 'Form Type', 'type': 'string'}}, 'required': ['form_type'], 'title': 'get_recommended_toolsArguments', 'type': 'object'}
