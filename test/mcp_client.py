@@ -1,5 +1,6 @@
 import asyncio
 import os
+import json
 from dotenv import load_dotenv
 
 from mcp import ClientSession, StdioServerParameters
@@ -25,16 +26,19 @@ async def main():
 
         
             #mcp server exposes capabilites
-            tools_response = await session.list_tools()  
-
-
-            print("\nAvailable tools:")
-            for tool in tools_response.tools:
-                print(tool.name)
-                print(tool.description)
-                print(tool.inputSchema)
-                print("-" * 50)
+            #tools_response = await session.list_tools()
+            # print("\nAvailable tools:")
+            # for tool in tools_response.tools:
+            #     print(tool.name)
+            #     print(tool.description)
+            #     print(tool.inputSchema)
+            #     print("-" * 50)
                 
+            response = await session.call_tool("get_recommended_tools",
+                                               {
+                                                   'form_type': '10-K'
+                                               })
+            print(response.content[0].text)
                 
 
 asyncio.run(main())
