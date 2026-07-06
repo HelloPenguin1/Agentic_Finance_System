@@ -8,7 +8,8 @@ def QueryDecompose(state: GraphState):
     return {
         "company": output.company,
         "start_date": output.start_date,
-        "end_date": output.end_date
+        "end_date": output.end_date,
+        "intent": output.intent
     }
     
             

@@ -10,6 +10,11 @@ class GraphState(TypedDict):
     """The persistent state memory of the workflow"""
     query: str  #User sends a query
     
+    #query decomposer output 
     start_date: Optional[str]
     end_date: Optional[str] = None
     company: List[str]
+    intent: Literal['report', 'qa'] = None
+    
+    
+    

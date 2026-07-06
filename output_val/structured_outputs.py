@@ -6,5 +6,6 @@ class queryDecompose(BaseModel):
     company: str
     start_date: Optional[str] = None
     end_date: Optional[str] = None
+    intent: Literal['report', 'qa'] = None
     
     
