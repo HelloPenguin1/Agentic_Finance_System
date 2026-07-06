@@ -9,7 +9,7 @@ from langchain_core.documents import Document
 class GraphState(TypedDict):
     """The persistent state memory of the workflow"""
     query: str  #User sends a query
-    requirement: Optional[str]  #Type of report to generate
-
-    #after User provides a company name 
+    
+    start_date: Optional[str]
+    end_date: Optional[str] = None
     company: List[str]
