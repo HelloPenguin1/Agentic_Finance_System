@@ -1,4 +1,4 @@
-from langchain_core.prompts import ChatPromptTemplate
+
 
 query_prompt = """
     You are a financial query routing agent. Analyze the user query and extract the following:
