@@ -9,6 +9,7 @@ OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "company_tickers
 
 
 def save_company_tickers(output_path: Path = OUTPUT_PATH) -> Path:
+    """Getting company ticker information JSON from SEC API"""
     response = requests.get(URL, headers=headers, timeout=30)
     response.raise_for_status()
 

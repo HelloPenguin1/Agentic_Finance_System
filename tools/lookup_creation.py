@@ -2,10 +2,8 @@ import json
 from pathlib import Path
 
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "company_tickers.json"
-COMPANY_PATH = Path(__file__).resolve().parent.parent / "data" / "company_lookup.json"
-TICKER_PATH = Path(__file__).resolve().parent.parent / "data" / "ticker_lookup.json"
+COMPANY_PATH = Path(__file__).resolve().parent.parent / "data" / "company_lookup.json" 
 
- 
 
 if __name__=="__main__":
     with open(OUTPUT_PATH, "r") as f:

@@ -24,6 +24,10 @@ def querydecomposer(query):
         response.choices[0].message.content
     )
 
+
+
+
+
 def main():
     test_query = "vdbv AAPLE 2008-09-20"
     try:
