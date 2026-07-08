@@ -26,16 +26,10 @@ def querydecomposer(query):
         response.choices[0].message.content
     )
     
-def main():
-    test_text = "This is a test sentence for embedding."
-    try:
-        embedding = fin_embedding.embed_query(test_text)
-        print(f"Embedding successful for text: {test_text}")
-        print(f"Embedding length: {len(embedding)}")
-        print(f"First 5 values: {embedding[:5]}")
-    except Exception as e:
-        print(f"Embedding failed: {e}")
 
+def main():
+    
+    return None
 
 if __name__ == "__main__":
     main()

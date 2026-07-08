@@ -9,6 +9,7 @@ def vectordb_store(chunks):
     _current_vectorstore = Chroma.from_documents(
         documents=chunks,
         embedding=EMBEDDING_MODEL,
+        persist_directory='./chroma_db'
     )
     return _current_vectorstore
 

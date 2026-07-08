@@ -11,8 +11,8 @@ class GraphState(TypedDict):
     query: str  #User sends a query
     
     #query decomposer output 
-    start_date: Optional[str]
-    end_date: Optional[str] = None
+    start_year: Optional[str]
+    end_year: Optional[str] = None
     company: List[str]
     intent: Literal['report', 'qa'] = None
     

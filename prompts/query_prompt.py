@@ -10,7 +10,7 @@ query_prompt = """
     EXTRACT THE FOLLOWING: 
     
     1) company
-    2) start date (in year)
-    3) end date (in year)
+    2) start_year (in year)
+    3) end_year (in year)
     4) intent (report or qa)
 """

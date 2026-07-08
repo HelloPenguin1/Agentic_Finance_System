@@ -13,15 +13,17 @@ class Construct_DB:
         if state["intent"]=='report':
             filings = self.fetcher.fetch_filings(
             ticker=state["company"],
-            start_date=state["start_date"],
-            end_date=state["end_date"])
+            start_year=state["start_year"],
+            end_year=state["end_year"])
             
         filings = list(filings)
     
         chunks = filings_to_langchain_docs(filings=filings, ticker=state["company"])
         vectordb_store(chunks)
         
-        return {}
+        return {
+            
+        }
 
     
         
