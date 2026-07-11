@@ -1,6 +1,7 @@
     
 from langchain_chroma import Chroma
 from config.llm_gateway import EMBEDDING_MODEL
+from itertools import batched
 
 _current_vectorstore = None
 
