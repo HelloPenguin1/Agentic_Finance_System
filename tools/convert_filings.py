@@ -1,8 +1,5 @@
 from langchain_classic.schema import Document
 
-        
-from langchain_classic.schema import Document
-
 def filings_to_langchain_docs(filings, ticker):
     """Convert filings into LangChain Document objects"""
 

@@ -9,4 +9,8 @@ class queryDecompose(BaseModel):
     intent: Literal['report', 'qa'] = None
     requested_sections: List[Literal["revenue", "profitability", "liquidity", "risk", "management"]] 
     
-    
+
+class sectionOutput(BaseModel):
+    """LLM generation for section-wise answer"""
+    heading: str
+    content: str
