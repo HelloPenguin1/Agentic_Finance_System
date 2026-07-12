@@ -7,11 +7,17 @@ _current_vectorstore = None
 
 def vectordb_store(chunks):
     global _current_vectorstore
-    _current_vectorstore = Chroma.from_documents(
-        documents=chunks,
-        embedding=EMBEDDING_MODEL,
+    
+    BATCH_SIZE = 64
+    
+    _current_vectorstore = Chroma(
+        embedding_function=EMBEDDING_MODEL,
         persist_directory='./chroma_db'
     )
+    
+    for batch in batched(chunks, BATCH_SIZE): 
+        _current_vectorstore.add_documents(list(batch))
+    
     return _current_vectorstore
 
 def get_vectorstore():

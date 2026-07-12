@@ -12,15 +12,12 @@ WORKER_CONFIG = {
             "services operating results guidance"
         ),
         "filter": {
-            "form": {"$in": ["10-K", "10-Q"]},
-            "section": {
-                "$in": [
-                    "Item 7",
-                    "Item 2"
-                ]
-            },
-            "source": "SEC"
-        }
+            "$and": [
+                {"form": {"$in": ["10-K", "10-Q"]}},
+                {"section": {"$in": ["Item 7", "Item 2"]}},
+                {"source": "SEC"},
+            ]
+        },
     },
 
     "profitability_agent": {
@@ -30,16 +27,12 @@ WORKER_CONFIG = {
             "profit earnings cost of revenue operating expenses"
         ),
         "filter": {
-            "form": {"$in": ["10-K", "10-Q"]},
-            "section": {
-                "$in": [
-                    "Item 7",
-                    "Item 8",
-                    "Item 1"
-                ]
-            },
-            "source": "SEC"
-        }
+            "$and": [
+                {"form": {"$in": ["10-K", "10-Q"]}},
+                {"section": {"$in": ["Item 7", "Item 8", "Item 1"]}},
+                {"source": "SEC"},
+            ]
+        },
     },
 
     "liquidity_agent": {
@@ -49,15 +42,12 @@ WORKER_CONFIG = {
             "cash flow financing investing operating activities"
         ),
         "filter": {
-            "form": {"$in": ["10-K", "10-Q"]},
-            "section": {
-                "$in": [
-                    "Item 7",
-                    "Item 2"
-                ]
-            },
-            "source": "SEC"
-        }
+            "$and": [
+                {"form": {"$in": ["10-K", "10-Q"]}},
+                {"section": {"$in": ["Item 7", "Item 2"]}},
+                {"source": "SEC"},
+            ]
+        },
     },
 
     "risk_agent": {
@@ -67,15 +57,12 @@ WORKER_CONFIG = {
             "supply chain cybersecurity macroeconomic"
         ),
         "filter": {
-            "form": {"$in": ["10-K", "10-Q"]},
-            "section": {
-                "$in": [
-                    "Item 1A",
-                    "Item 3"
-                ]
-            },
-            "source": "SEC"
-        }
+            "$and": [
+                {"form": {"$in": ["10-K", "10-Q"]}},
+                {"section": {"$in": ["Item 1A", "Item 3"]}},
+                {"source": "SEC"},
+            ]
+        },
     },
 
     "management_agent": {
@@ -85,16 +72,13 @@ WORKER_CONFIG = {
             "future expectations priorities investments"
         ),
         "filter": {
-            "form": {"$in": ["10-K", "10-Q"]},
-            "section": {
-                "$in": [
-                    "Item 7",
-                    "Item 2"
-                ]
-            },
-            "source": "SEC"
-        }
-    }
+            "$and": [
+                {"form": {"$in": ["10-K", "10-Q"]}},
+                {"section": {"$in": ["Item 7", "Item 2"]}},
+                {"source": "SEC"},
+            ]
+        },
+    },
 }
 
 PROMPTS = {

@@ -12,6 +12,6 @@ query_prompt = """
     1) company
     2) start_year (in year)
     3) end_year (in year)
-    4) intent (report or qa)
+    4) intent (report or specific)
     5) requested_sections: section agents needed from the 10-K, 10-Q and/or 8-K report based on what the user needs:
     """

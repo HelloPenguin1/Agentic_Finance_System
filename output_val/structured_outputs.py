@@ -6,7 +6,7 @@ class queryDecompose(BaseModel):
     company: str
     start_year: Optional[str] = None
     end_year: Optional[str] = None
-    intent: Literal['report', 'qa'] = None
+    intent: Literal['report', 'specific'] = None
     requested_sections: List[Literal["revenue", "profitability", "liquidity", "risk", "management"]] 
     
 
