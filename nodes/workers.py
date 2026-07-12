@@ -6,7 +6,7 @@ from prompts.worker_prompts import revenue_prompt, profitability_prompt, liquidi
 WORKER_CONFIG = {
 
     "revenue_agent": {
-        "k": 6,
+        "k": 4,
         "retrieval_query": (
             "revenue growth segment revenue sales products "
             "services operating results guidance"

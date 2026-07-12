@@ -13,10 +13,13 @@ WORKER_MAP = {
 
 def assign_workers(state: GraphState):
 
-    return [
-        Send(
-            WORKER_MAP[section], #send to respective agents the state 
-            state
-        )
-        for section in state["requested_sections"]
-    ]
+    sends = []
+    
+    for section in state["requested_sections"]:
+        worker = WORKER_MAP.get(section)
+        
+        if worker:
+            sends.append(
+                Send(worker, state)
+            )
+    return sends

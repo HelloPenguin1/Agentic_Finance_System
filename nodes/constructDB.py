@@ -21,9 +21,7 @@ class Construct_DB:
         chunks = filings_to_langchain_docs(filings=filings, ticker=state["company"])
         vectordb_store(chunks)
         
-        return {
-            
-        }
+        return { }
 
     
         
