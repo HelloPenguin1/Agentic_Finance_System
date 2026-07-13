@@ -31,3 +31,5 @@ class GraphState(TypedDict):
     ]
     
     final_report: str
+
+    retrieved_docs = []

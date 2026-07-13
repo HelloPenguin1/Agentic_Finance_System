@@ -4,17 +4,25 @@ from prompts.worker_prompts import revenue_prompt, profitability_prompt, liquidi
 
 
 WORKER_CONFIG = {
-
     "revenue_agent": {
-        "k": 4,
+        "k": 6,  # Sightly increased to capture both narrative and dense tables
         "retrieval_query": (
-            "revenue growth segment revenue sales products "
-            "services operating results guidance"
+            "revenue recognition segment revenue sales breakdown products services "
+            "operating results disaggregated revenue revenue from contracts with customers"
         ),
         "filter": {
             "$and": [
                 {"form": {"$in": ["10-K", "10-Q"]}},
-                {"section": {"$in": ["Item 7", "Item 2"]}},
+                {
+                    "section": {
+                        "$in": [
+                            "Item 7",          # 10-K MD&A
+                            "Item 8",          # 10-K Financial Statements & Footnotes
+                            "Part I, Item 2",  # 10-Q MD&A
+                            "Part I, Item 1",  # 10-Q Financial Statements & Footnotes
+                        ]
+                    }
+                },
                 {"source": "SEC"},
             ]
         },
@@ -23,43 +31,70 @@ WORKER_CONFIG = {
     "profitability_agent": {
         "k": 6,
         "retrieval_query": (
-            "gross margin operating margin net income "
-            "profit earnings cost of revenue operating expenses"
+            "gross profit margin operating income net income earnings per share EPS "
+            "cost of sales operating expenses selling general administrative SG&A"
         ),
         "filter": {
             "$and": [
                 {"form": {"$in": ["10-K", "10-Q"]}},
-                {"section": {"$in": ["Item 7", "Item 8", "Item 1"]}},
+                {
+                    "section": {
+                        "$in": [
+                            "Item 7",          # 10-K MD&A
+                            "Item 8",          # 10-K Income Statement / Footnotes
+                            "Part I, Item 2",  # 10-Q MD&A
+                            "Part I, Item 1",  # 10-Q Income Statement
+                        ]
+                    }
+                },
                 {"source": "SEC"},
             ]
         },
     },
 
     "liquidity_agent": {
-        "k": 5,
+        "k": 6,
         "retrieval_query": (
-            "cash liquidity capital resources debt "
-            "cash flow financing investing operating activities"
+            "cash equivalents liquidity working capital operating investing financing activities "
+            "cash flows capital expenditures CapEx debt obligations credit facility share repurchases"
         ),
         "filter": {
             "$and": [
                 {"form": {"$in": ["10-K", "10-Q"]}},
-                {"section": {"$in": ["Item 7", "Item 2"]}},
+                {
+                    "section": {
+                        "$in": [
+                            "Item 7",          # 10-K MD&A (Capital Resources)
+                            "Item 8",          # 10-K Statement of Cash Flows
+                            "Part I, Item 2",  # 10-Q MD&A
+                            "Part I, Item 1",  # 10-Q Statement of Cash Flows
+                        ]
+                    }
+                },
                 {"source": "SEC"},
             ]
         },
     },
 
     "risk_agent": {
-        "k": 5,
+        "k": 6,
         "retrieval_query": (
-            "risk competition regulation litigation "
-            "supply chain cybersecurity macroeconomic"
+            "risk factors competition regulatory litigation legal proceedings supply chain "
+            "cybersecurity macroeconomic headwinds concentration customer dependence"
         ),
         "filter": {
             "$and": [
                 {"form": {"$in": ["10-K", "10-Q"]}},
-                {"section": {"$in": ["Item 1A", "Item 3"]}},
+                {
+                    "section": {
+                        "$in": [
+                            "Item 1A",         # 10-K Risk Factors
+                            "Item 3",          # 10-K Legal Proceedings
+                            "Part II, Item 1A",# 10-Q Risk Factors
+                            "Part II, Item 1", # 10-Q Legal Proceedings
+                        ]
+                    }
+                },
                 {"source": "SEC"},
             ]
         },
@@ -68,13 +103,20 @@ WORKER_CONFIG = {
     "management_agent": {
         "k": 5,
         "retrieval_query": (
-            "management strategy outlook guidance "
-            "future expectations priorities investments"
+            "business outlook trends uncertainties management strategy growth initiatives "
+            "long term goals restructuring integration execution plans"
         ),
         "filter": {
             "$and": [
                 {"form": {"$in": ["10-K", "10-Q"]}},
-                {"section": {"$in": ["Item 7", "Item 2"]}},
+                {
+                    "section": {
+                        "$in": [
+                            "Item 7",          # 10-K MD&A Outlook
+                            "Part I, Item 2",  # 10-Q MD&A Outlook
+                        ]
+                    }
+                },
                 {"source": "SEC"},
             ]
         },
@@ -136,8 +178,7 @@ def run_worker(worker_name: str, section_name: str, state):
         "completed_sections": [{
             "section": output.heading,
             "content": output.content,
-        }
-    ]
+        }]
 }
 
 

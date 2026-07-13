@@ -20,7 +20,7 @@ class FilingFetcher:
         company = Company(ticker)
 
         start = f"{start_year}-01-01"
-        end = f"{end_year}-12-31" if end_year else ""
+        end = f"{end_year}-12-31" if end_year else f"{start_year}-12-31"
 
         date_range = f"{start}:{end}"
 

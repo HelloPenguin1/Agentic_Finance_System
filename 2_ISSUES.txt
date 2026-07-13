@@ -1,0 +1,15 @@
+
+
+# retrieval docs not retrieving correct information (duplication of information)
+ - print chunk content to debug what it is retrieving 
+ - OR store chunk in state for viewing - needed anyway for citation checker if to be added
+- deduplication neded/ unique ID to be created
+
+ISSUE 1:
+- retrieval retrieving same chunks multiple times
+- WHY?
+    - same data getting reindexed under different IDs mutliple times after multiple same user query, populating the vector space
+    SOLUTION: proper data ingestion script by setting deterministic vector iDs
+                - clearing vectordb after session 
+    
+    - 

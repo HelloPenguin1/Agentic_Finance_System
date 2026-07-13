@@ -1,0 +1,14 @@
+
+
+# VECTORDB INGESTION SLOW
+ - batch embedding?
+ - async processing?
+
+# add hybrid retrieval 
+
+#citation/ hallucination checker agent\
+
+#get complete tables/reports that SEC EDGAR API provides
+- possibly have an llm describe it? multimodal capability
+
+#add web search api
