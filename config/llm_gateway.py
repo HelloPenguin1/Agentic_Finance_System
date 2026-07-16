@@ -27,10 +27,11 @@ def querydecomposer(query):
 def generate_section(context, section, company, section_prompt):
     response = completion(
         model = MODEL1,
+        max_completion_tokens=420,
         temperature=0.3,
         messages=[
             {"role":"system",
-             "content": "You are a financial expert analysis assistant tasked to write a detailed but accurate section of a financial report"},
+             "content": "You are a financial expert analysis assistant tasked to write a detailed and grounded analysis based on financial SEC filings and financial statements"},
             {"role":"user",
              "content": f"""
              {section_prompt}
