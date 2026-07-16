@@ -16,14 +16,17 @@ class Construct_DB:
         ticker=state["company"],
         start_year=state["start_year"],
         end_year=state["end_year"])
+
+        try:    
+            filings = list(filings)
+        except ValueError:
+            print(f"Error with fetched filings")
             
-        filings = list(filings)
-    
         chunks = filings_to_langchain_docs(filings=filings, ticker=state["company"])
         vectordb_store(chunks)
         
         return { }
 
+
     
-        
 

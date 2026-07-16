@@ -15,15 +15,15 @@ class SectionOutput(TypedDict):
     
 class GraphState(TypedDict):
     """The persistent state memory of the workflow"""
-    query: str  #User sends a query
-    
-    #query decomposer output 
+    query: str  # User sends a query
+
+    # query decomposer output
     start_year: Optional[str]
     end_year: Optional[str] = None
     company: List[str]
-    intent: Literal['report', 'qa'] = None
-    
-    requested_sections: List[str] #update the query decomposer node to return the list of all agents if intent is report
+    intent: Literal["report", "specific"] = None
+
+    requested_sections: List[str]  # update the query decomposer node to return the list of all agents if intent is report
 
     completed_sections: Annotated[
         List[SectionOutput],

@@ -31,16 +31,7 @@ class FilingFetcher:
 
         return filings
     
-    
-    def fetch_statements(
-        self, ticker
-    ):
-        return 0
-    
-    
-    
-    
-    
+
 
 if __name__=="__main__":
     fetcher = FilingFetcher()
