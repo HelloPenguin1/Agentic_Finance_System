@@ -5,7 +5,7 @@ from prompts.worker_prompts import revenue_prompt, profitability_prompt, liquidi
 
 WORKER_CONFIG = {
     "revenue_agent": {
-        "k": 6,  # Sightly increased to capture both narrative and dense tables
+        "k": 5,  # Sightly increased to capture both narrative and dense tables
         "retrieval_query": (
             "revenue recognition segment revenue sales breakdown products services "
             "operating results disaggregated revenue revenue from contracts with customers"
@@ -29,7 +29,7 @@ WORKER_CONFIG = {
     },
 
     "profitability_agent": {
-        "k": 6,
+        "k": 5,
         "retrieval_query": (
             "gross profit margin operating income net income earnings per share EPS "
             "cost of sales operating expenses selling general administrative SG&A"
@@ -53,7 +53,7 @@ WORKER_CONFIG = {
     },
 
     "liquidity_agent": {
-        "k": 6,
+        "k": 5,
         "retrieval_query": (
             "cash equivalents liquidity working capital operating investing financing activities "
             "cash flows capital expenditures CapEx debt obligations credit facility share repurchases"
@@ -77,7 +77,7 @@ WORKER_CONFIG = {
     },
 
     "risk_agent": {
-        "k": 6,
+        "k": 5,
         "retrieval_query": (
             "risk factors competition regulatory litigation legal proceedings supply chain "
             "cybersecurity macroeconomic headwinds concentration customer dependence"
