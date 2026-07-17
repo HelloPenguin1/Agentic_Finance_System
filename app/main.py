@@ -7,6 +7,7 @@ if str(ROOT_DIR) not in sys.path:
 
 from fastapi import FastAPI
 from pydantic import BaseModel
+from langchain_core.messages import HumanMessage
 from graph.workflow import workflow
 from vectordb.vectorstore import clear_vectorstore
 
@@ -24,7 +25,8 @@ async def read_root():
 
 @app.post("/query")
 async def user_query(query: QueryRequest):
-    result = workflow.invoke({'query':query.user_question})
+    result = workflow.invoke(
+        {'messages': [HumanMessage(content=query.user_question)]})
     return {'result': result.get("completed_sections")} 
 
 @app.post("/clear_vectorstore")
