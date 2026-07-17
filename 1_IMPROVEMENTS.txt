@@ -11,4 +11,12 @@
 #get complete tables/reports that SEC EDGAR API provides
 - possibly have an llm describe it? multimodal capability
 
-#add web search api
+#implement postgresql for state persistence..
+if interviewer asks why:
+    "I wanted durable conversation state. InMemorySaver is useful for development because it's 
+    simple, but it loses all state when the application restarts. 
+
+    PostgreSQL persists checkpoints to disk, so conversations survive restarts and multiple requests. 
+    It also exposed me to a production database that I can later extend with users, chat metadata, and analytics."
+
+It does not change how llm ehaves, it only chnages persistence
