@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, START, END
+from langchain_core.messages import HumanMessage
 from .state import GraphState
 from nodes.query_decompose import QueryDecompose
 from nodes.constructDB import Construct_DB
@@ -42,3 +43,7 @@ workflow.add_edge("risk_agent", END)
 
 workflow = workflow.compile()
 
+
+if __name__=='__main__':
+    response = workflow.invoke({'messages': [HumanMessage(content='Apple revenue 2024')]})
+    print(response)
