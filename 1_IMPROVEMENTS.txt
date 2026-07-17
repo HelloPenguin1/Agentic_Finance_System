@@ -11,6 +11,9 @@
 #get complete tables/reports that SEC EDGAR API provides
 - possibly have an llm describe it? multimodal capability
 
+
+
+
 #implement postgresql for state persistence..
 if interviewer asks why:
     "I wanted durable conversation state. InMemorySaver is useful for development because it's 
@@ -19,4 +22,10 @@ if interviewer asks why:
     PostgreSQL persists checkpoints to disk, so conversations survive restarts and multiple requests. 
     It also exposed me to a production database that I can later extend with users, chat metadata, and analytics."
 
-It does not change how llm ehaves, it only chnages persistence
+It does not change how llm ehaves, it only chnages where langgraph stores state data
+
+Q.2. Why not SQlite ? Why PostgreSQL?
+SOl: 
+    SQLite is excellent for local development, but PostgreSQL is the standard relational database in many production environments.
+    I wanted experience with connection management, SQL, and integrating a production-grade database.
+    
