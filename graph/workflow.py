@@ -5,6 +5,20 @@ from nodes.query_decompose import QueryDecompose
 from nodes.constructDB import Construct_DB
 from nodes.workers import revenue_agent, profitability_agent, liquidity_agent, management_agent, risk_agent
 from nodes.assign_workers import assign_workers
+import psycopg
+from psycopg.rows import dict_row
+from langgraph.checkpoint.postgres import PostgresSaver
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
+DATABASE_URI = os.getenv("DB_URI")
+
+conn = psycopg.connect(
+    DATABASE_URI,
+    autocommit=True,
+    row_factory=dict_row
+)
 
 workflow = StateGraph(GraphState)
 construct_db = Construct_DB()
@@ -18,8 +32,6 @@ workflow.add_node("profitability_agent", profitability_agent)
 workflow.add_node("risk_agent", risk_agent)
 workflow.add_node("management_agent", management_agent)
 workflow.add_node("liquidity_agent", liquidity_agent)
-
-
 
 
 #Edge Defintion
@@ -39,9 +51,12 @@ workflow.add_edge("profitability_agent", END)
 workflow.add_edge("management_agent", END)
 workflow.add_edge("risk_agent", END)
 
+checkpointer = PostgresSaver(conn)
+checkpointer.setup()
 
-
-workflow = workflow.compile()
+workflow.compile(
+    checkpointer=checkpointer
+)
 
 
 if __name__=='__main__':
