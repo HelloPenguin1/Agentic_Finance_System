@@ -4,18 +4,19 @@ from langgraph.types import Send
 from langchain_core.vectorstores import VectorStore
 import operator
 from langchain_core.documents import Document
+from langgraph.graph.message import add_messages
 
-
+from langchain_core.messages import AnyMessage
 
 
 class SectionOutput(TypedDict):
     section:str
     content:str
-    
+
     
 class GraphState(TypedDict):
     """The persistent state memory of the workflow"""
-    query: str  # User sends a query
+    messages: Annotated[List[AnyMessage], add_messages]
 
     # query decomposer output
     start_year: Optional[str]
@@ -30,6 +31,6 @@ class GraphState(TypedDict):
         operator.add
     ]
     
-    final_report: str
+    final_report: str   
 
     retrieved_docs = []

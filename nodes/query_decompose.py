@@ -5,7 +5,7 @@ from tools.resolve_c import resolve_company
 
 def QueryDecompose(state: GraphState):
     """This node takes a user query and extracts entity infomration"""
-    output = querydecomposer(state['query'])
+    output = querydecomposer(state['messages'][-1].content)
     all_sections = ["revenue", "profitability", "risk", "management", "liquidity"]
     
     #Set sections to 'all' workers if report is asked
