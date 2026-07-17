@@ -1,4 +1,3 @@
-import os
 import sys
 from pathlib import Path
 
@@ -9,7 +8,7 @@ if str(ROOT_DIR) not in sys.path:
 from fastapi import FastAPI
 from pydantic import BaseModel
 from graph.workflow import workflow
-
+from vectordb.vectorstore import clear_vectorstore
 
 app = FastAPI(
     title="Multi-Agent Finance Assistant",
@@ -18,7 +17,6 @@ app = FastAPI(
 
 class QueryRequest(BaseModel):
     user_question: str
-    
 
 @app.get("/")
 async def read_root():
@@ -27,4 +25,12 @@ async def read_root():
 @app.post("/query")
 async def user_query(query: QueryRequest):
     result = workflow.invoke({'query':query.user_question})
-    return {'result': result.get("completed_sections")}
+    return {'result': result.get("completed_sections")} 
+
+@app.post("/clear_vectorstore")
+async def clear_vectorstore_endpoint():
+    return {"message": clear_vectorstore()}
+
+
+    
+    
