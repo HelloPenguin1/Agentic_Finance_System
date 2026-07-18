@@ -7,7 +7,6 @@ from output_val.structured_outputs import queryDecompose, sectionOutput
 from prompts.query_prompt import query_prompt
 from langchain_openai import OpenAIEmbeddings
 from langsmith import traceable
-from .llm_monitoring import extract_llm_logs
 import logging
 
 MODEL1 = "groq/openai/gpt-oss-20b"
@@ -20,8 +19,6 @@ llm_semaphore = Semaphore(2)
 @traceable(run_type='llm')
 def invoke_llm(**kwargs):
     response = completion(**kwargs)
-    metrics = extract_llm_logs(response)
-    logger.info(metrics)
     return response
 
 def querydecomposer(query):
