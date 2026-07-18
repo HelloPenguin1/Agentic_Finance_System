@@ -30,4 +30,4 @@ def extract_llm_logs(response, model):
         prompt_cost=prompt_cost,
         completion_cost=completion_cost_est,
         total_cost=total_cost,
-    )
+    )       

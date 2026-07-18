@@ -24,6 +24,7 @@ WORKER_CONFIG = {
                     }
                 },
                 {"source": "SEC"},
+                #{"filing_date": },
             ]
         },
     },

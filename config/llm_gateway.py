@@ -1,34 +1,45 @@
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
 from threading import Semaphore
-
 from litellm import completion
 from output_val.structured_outputs import queryDecompose, sectionOutput
 from prompts.query_prompt import query_prompt
 from langchain_openai import OpenAIEmbeddings
+from langsmith import traceable
+from .llm_monitoring import extract_llm_logs
+import logging
 
 MODEL1 = "groq/openai/gpt-oss-20b"
 EMBEDDING_MODEL = OpenAIEmbeddings(model="text-embedding-3-small")
+
+logger = logging.getLogger(__name__)
+
 llm_semaphore = Semaphore(2)
 
+@traceable(run_type='llm')
+def invoke_llm(**kwargs):
+    response = completion(**kwargs)
+    metrics = extract_llm_logs(response)
+    logger.info(metrics)
+    return response
+
 def querydecomposer(query):
-    response = completion(
+    response = invoke_llm(
     model = MODEL1,
     temperature=0,
     messages=[
         {"role":"system","content": query_prompt},
         {"role":"user","content":query}],
-    response_format = queryDecompose
+        response_format = queryDecompose
     )
-    return queryDecompose.model_validate_json(
-        response.choices[0].message.content
-    )
+    return queryDecompose.model_validate_json(  
+        response.choices[0].message.content)
+    
 
 def generate_section(context, section, company, section_prompt):
     with llm_semaphore:
-        response = completion(
+        response = invoke_llm(
             model = MODEL1,
             max_completion_tokens=800,
             temperature=0.3,
@@ -51,9 +62,8 @@ def generate_section(context, section, company, section_prompt):
                 """}],
             response_format = sectionOutput
             )
-        return sectionOutput.model_validate_json(
-                response.choices[0].message.content
-            )
+        
+        return sectionOutput.model_validate_json(response.choices[0].message.content)
     
     
 
