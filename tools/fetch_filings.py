@@ -30,15 +30,15 @@ class FilingFetcher:
         )
 
         return filings
-    
+        #return date_range
 
 
 if __name__=="__main__":
     fetcher = FilingFetcher()
     filings = fetcher.fetch_filings(ticker= 'AAPL',
-                                    start_year=2024,
-                                    end_year=2025,
-    )
+                                    start_year=2022)
+                                
+    
     print(filings)
     
     

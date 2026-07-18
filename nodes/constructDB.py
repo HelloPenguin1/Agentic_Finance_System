@@ -1,6 +1,6 @@
 from tools.fetch_filings import FilingFetcher
 from tools.convert_filings import filings_to_langchain_docs
-from vectordb.vectorstore import vectordb_store
+from vectordb.vectorstore import vectordb_store, get_vectorstore
 
 class Construct_DB:
     def __init__(self):
@@ -23,7 +23,9 @@ class Construct_DB:
             print(f"Error with fetched filings")
             
         chunks = filings_to_langchain_docs(filings=filings, ticker=state["company"])
-        vectordb_store(chunks)
+        
+        vectordb = get_vectorstore()
+        vectordb_store(vectordb, chunks)
         
         return { }
 

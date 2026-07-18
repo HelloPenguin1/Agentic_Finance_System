@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 llm_semaphore = Semaphore(2)
 
+
 @traceable(run_type='llm')
 def invoke_llm(**kwargs):
     response = completion(**kwargs)

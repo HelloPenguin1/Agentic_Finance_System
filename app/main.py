@@ -26,11 +26,7 @@ async def read_root():
 @app.post("/query")
 async def user_query(query: QueryRequest):
     result = workflow.invoke(
-        {'messages': [HumanMessage(content=query.user_question)]},
-        config={
-        "configurable": {
-            "thread_id": "demo_id"
-        }})
+        {'messages': [HumanMessage(content=query.user_question)]})
     return {'result': result.get("completed_sections")} 
 
 @app.post("/clear_vectorstore")
