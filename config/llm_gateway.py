@@ -25,7 +25,7 @@ def invoke_llm(**kwargs):
 def querydecomposer(query):
     response = invoke_llm(
     model = MODEL1,
-    temperature=0,
+    temperature=0.1,
     messages=[
         {"role":"system","content": query_prompt},
         {"role":"user","content":query}],
@@ -35,7 +35,7 @@ def querydecomposer(query):
         response.choices[0].message.content)
     
 
-def generate_section(context, section, company, section_prompt):
+def generate_section(user_query, context, section, company, section_prompt):
     with llm_semaphore:
         response = invoke_llm(
             model = MODEL1,
@@ -44,20 +44,24 @@ def generate_section(context, section, company, section_prompt):
             messages=[
                 {"role":"system",
                 "content": """
-                You are a financial expert analysis assistant tasked to write a grounded analysis based on financial SEC filings and financial statements
+                You are a financial expert analysis assistant tasked to write a grounded answer based on financial SEC filings and financial statements
                 Respond ONLY with valid JSON.
                 """},
                 {"role":"user",
                 "content": f"""
-                {section_prompt}
-                Write a report section on topic {section} for {company} given provided context:
+                    {section_prompt}
 
-                \n\n
-                Context: 
-                \n\n 
-                {context}
+                    User Question:
+                    {user_query}
 
-                """}],
+                    Topic:
+                    {section}
+
+                    Company:
+                    {company}
+
+                    Context:
+                    {context}"""}],
             response_format = sectionOutput
             )
         

@@ -9,6 +9,7 @@ class queryDecompose(BaseModel):
     end_year: Optional[str] = None
     intent: Literal["report", "specific"] = "specific"
     requested_sections: List[Literal["revenue", "profitability", "liquidity", "risk", "management"]] = Field(default_factory=list)
+    optimized_query: str
 
 
 class sectionOutput(BaseModel):

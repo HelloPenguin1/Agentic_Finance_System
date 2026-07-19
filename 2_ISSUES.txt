@@ -36,4 +36,17 @@ ISSUE 3: retrieval weak, user asks specific query and retrieval pipeleine retriv
     The retrieval query should be optimized for vector similarity search over SEC filings.
     Do not generate an answer
 - [OPTIONAL] make queryDecomposer add 'retriever_depth' that dynamically changes k values depending on how broad the user wants the question to be
+
+    ****
+    The LLM should receive
+
+        original user query
+        retrieved context
+        instructions
+
+    The retriever should receive
+
+        optimized query
+    ****
+
 ======================================================================

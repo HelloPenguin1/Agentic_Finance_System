@@ -12,13 +12,13 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-DATABASE_URI = os.getenv("DB_URI")
+# DATABASE_URI = os.getenv("DB_URI")
 
-conn = psycopg.connect(
-    DATABASE_URI,
-    autocommit=True,
-    row_factory=dict_row
-)
+# conn = psycopg.connect(
+#     DATABASE_URI,
+#     autocommit=True,
+#     row_factory=dict_row
+# )
 
 workflow = StateGraph(GraphState)
 construct_db = Construct_DB()
@@ -51,14 +51,14 @@ workflow.add_edge("profitability_agent", END)
 workflow.add_edge("management_agent", END)
 workflow.add_edge("risk_agent", END)
 
-checkpointer = PostgresSaver(conn)
-checkpointer.setup()
+# checkpointer = PostgresSaver(conn)
+# checkpointer.setup()
 
-workflow = workflow.compile(
-    checkpointer=checkpointer,
-)
-
-
+# workflow = workflow.compile(
+#     checkpointer=checkpointer,
+# )
+workflow = workflow.compile()
+ 
 if __name__=='__main__':
     response = workflow.invoke({'messages': [HumanMessage(content='Apple revenue 2024')]})
     print(response)
