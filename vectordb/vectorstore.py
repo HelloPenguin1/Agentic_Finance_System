@@ -14,6 +14,7 @@ def get_vectorstore():
         embedding_function=EMBEDDING_MODEL,
         persist_directory=str(_PERSIST_DIR)
     )
+    
 
 def vectordb_store(vectordb, chunks):
     for batch in batched(chunks, BATCH_SIZE):
