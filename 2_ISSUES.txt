@@ -5,15 +5,35 @@
  - OR store chunk in state for viewing - needed anyway for citation checker if to be added
 - deduplication neded/ unique ID to be created
 
-ISSUE 1:
+ISSUE 1: FIXED
 - retrieval retrieving same chunks multiple times
 - WHY?
     - same data getting reindexed under different IDs mutliple times after multiple same user query, populating the vector space
     SOLUTION: proper data ingestion script by setting deterministic vector iDs
                 - clearing vectordb after session 
     
-
-ISSUE 2: 
+========================================================================================================================
+ISSUE 2:   FIXED
 - wrong documents getting retrieved (from wrong year)
 SOLUTION:
 - metadata filtering so that documents with only the specified date are being retrieved
+
+=========================================================================================================================
+ISSUE 3: retrieval weak, user asks specific query and retrieval pipeleine retrives generic jargon related to that topic 
+- SOLUTION:
+
+- Use queryDecomposer for query rewriting / transformation
+- remove retrieval query hardcoded in worker config and replace with retrieval keywords to join into the retrieval query 
+        retrieval_query = f"""
+        {state["retrieval_query"]}
+
+        {" ".join(config["keywords"])}
+        """
+- change the generic query prompt 
+    Analyze the user's financial question.
+    Extract routing metadata.
+    Produce a concise semantic retrieval query that preserves the user's intent while expanding abbreviations and financial concepts.
+    The retrieval query should be optimized for vector similarity search over SEC filings.
+    Do not generate an answer
+- [OPTIONAL] make queryDecomposer add 'retriever_depth' that dynamically changes k values depending on how broad the user wants the question to be
+======================================================================
