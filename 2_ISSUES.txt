@@ -12,4 +12,8 @@ ISSUE 1:
     SOLUTION: proper data ingestion script by setting deterministic vector iDs
                 - clearing vectordb after session 
     
-    - 
+
+ISSUE 2: 
+- wrong documents getting retrieved (from wrong year)
+SOLUTION:
+- metadata filtering so that documents with only the specified date are being retrieved

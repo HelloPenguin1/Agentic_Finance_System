@@ -54,8 +54,8 @@ workflow.add_edge("risk_agent", END)
 checkpointer = PostgresSaver(conn)
 checkpointer.setup()
 
-workflow.compile(
-    checkpointer=checkpointer
+workflow = workflow.compile(
+    checkpointer=checkpointer,
 )
 
 

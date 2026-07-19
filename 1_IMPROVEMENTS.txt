@@ -6,7 +6,11 @@
 
 # add hybrid retrieval 
 
+
+
 #citation/ hallucination checker agent\
+
+
 
 #get complete tables/reports that SEC EDGAR API provides
 - possibly have an llm describe it? multimodal capability
@@ -15,7 +19,7 @@
 
 
 #implement postgresql for state persistence..
-if interviewer asks why:
+If interviewer asks why:
     "I wanted durable conversation state. InMemorySaver is useful for development because it's 
     simple, but it loses all state when the application restarts. 
 
@@ -29,3 +33,8 @@ SOl:
     SQLite is excellent for local development, but PostgreSQL is the standard relational database in many production environments.
     I wanted experience with connection management, SQL, and integrating a production-grade database.
     
+
+
+## Add ability for multi user with multi threads so that each user have distinct conversations
+
+##Add Cache for same conversatiosn
