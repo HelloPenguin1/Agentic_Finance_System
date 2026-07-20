@@ -1,5 +1,5 @@
-from tools.fetch_filings import FilingFetcher
-from tools.convert_filings import filings_to_langchain_docs
+from utils.fetch_filings import FilingFetcher
+from utils.convert_filings import filings_to_langchain_docs
 from vectordb.vectorstore import vectordb_store, get_vectorstore
 
 class Construct_DB:
