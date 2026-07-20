@@ -68,7 +68,7 @@ Extract the following fields:
 
 6. optimized_query
 
-   Generate a semantic retrieval query optimized for vector similarity search over SEC filings.
+   Generate a semantic retrieval query close to natural language optimized for vector similarity search over SEC filings.
 
    The retrieval query should contain the key entities, financial concepts, products, business segments, events, and time references needed to retrieve the most relevant filing excerpts.
 

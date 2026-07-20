@@ -8,11 +8,24 @@ from langgraph.graph.message import add_messages
 
 from langchain_core.messages import AnyMessage
 
+# SCHEMAS
+
+class Citation(TypedDict):
+    form: str
+    section: str
+    accession_number: int
+
+class Finding(TypedDict):
+    claim: str
+    explanation: Optional[str] = None
+    citations: List[Citation]
 
 class SectionOutput(TypedDict):
-    section:str
-    content:str
+    section: str
+    findings: List[Finding]
 
+
+# GRAPH STATE 
     
 class GraphState(TypedDict):
     """The persistent state memory of the workflow"""
@@ -30,4 +43,3 @@ class GraphState(TypedDict):
         operator.add
     ]
     
-    retrieved_docs = []
