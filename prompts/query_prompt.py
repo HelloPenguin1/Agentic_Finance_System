@@ -68,20 +68,25 @@ Extract the following fields:
 
 6. optimized_query
 
-   Generate a semantic retrieval query close to natural language optimized for vector similarity search over SEC filings.
+Generate a semantically enriched retrieval query for vector similarity search over SEC filings.
 
-   The retrieval query should contain the key entities, financial concepts, products, business segments, events, and time references needed to retrieve the most relevant filing excerpts.
+The optimized query should be a concise natural-language rewrite of the user's request, not a list of keywords.
 
-   Requirements:
+The goal is to improve semantic retrieval while preserving the user's original intent.
 
-   - Preserve the user's intent.
-   - Expand abbreviations when helpful.
-   - Replace vague wording with clear business language.
-   - Keep important entities such as company, year, products, business segments, financial metrics, and events.
-   - Do NOT answer the question.
-   - Do NOT invent financial concepts unrelated to the user's request.
-   - Keep the query under approximately 25 words.
-   - Do NOT include section names such as "profitability" or "management" unless explicitly mentioned by the user.
+Requirements:
+
+- Preserve the user's original question and intent.
+- Rewrite the request into clear, professional business language.
+- Expand abbreviations when helpful (e.g., AI → artificial intelligence).
+- Include the company, financial metric, product, business segment, event, or time period mentioned by the user when relevant.
+- Preserve causal language such as "why", "how", "what factors", "drivers", "impact", "risks", and "changes" whenever present.
+- Prefer complete natural-language phrases over disconnected keywords.
+- Do NOT answer the question.
+- Do NOT invent products, business segments, financial metrics, or events that the user did not mention.
+- Do NOT add unrelated financial concepts simply to improve retrieval.
+- Keep the rewritten query under approximately 30 words.
+- Do NOT mention internal section names such as "profitability", "management", "risk", or "liquidity" unless the user explicitly refers to them.
 
 Examples
 
@@ -89,7 +94,7 @@ User:
 Apple profits 2020
 
 optimized_query:
-Apple 2020 profit decline net income operating income earnings
+What drove Apple's profitability during fiscal year 2020?
 
 ----------------------------
 
@@ -97,7 +102,7 @@ User:
 Why did Apple margins decrease?
 
 optimized_query:
-Apple gross margin decline operating margin decrease management explanation
+What factors contributed to the decline in Apple's operating margin?
 
 ----------------------------
 
@@ -105,7 +110,7 @@ User:
 Apple cash flow 2023
 
 optimized_query:
-Apple 2023 operating cash flow investing cash flow financing cash flow liquidity
+What factors affected Apple's cash flow during fiscal year 2023?
 
 ----------------------------
 
@@ -113,7 +118,15 @@ User:
 Did Apple mention AI investments?
 
 optimized_query:
-Apple artificial intelligence machine learning generative AI investments strategy management discussion
+Did Apple discuss investments in artificial intelligence during the reporting period?
+
+----------------------------
+
+User:
+How did Services revenue grow?
+
+optimized_query:
+What factors contributed to the growth of Apple's Services revenue?
 
 ----------------------------
 
@@ -133,5 +146,4 @@ requested_sections:
 ]
 
 optimized_query:
-Apple 2024 financial performance and business operations
-"""
+Summarize Apple's financial performance, business operations, and key developments during fiscal year 2024."""
