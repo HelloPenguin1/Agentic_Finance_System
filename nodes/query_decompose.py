@@ -1,6 +1,6 @@
 from graph.state import GraphState
 from config.llm_gateway import querydecomposer
-from tools.resolve_c import resolve_company
+from utils.resolve_c import resolve_company
 
 
 def QueryDecompose(state: GraphState):

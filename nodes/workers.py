@@ -144,7 +144,7 @@ class WorkerAgent:
         } for d in docs]
         
         return context
-    
+     
     
     def generate(self, context, state):
         #Generation only 

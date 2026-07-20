@@ -3,7 +3,7 @@ from pathlib import Path
 from langchain_chroma import Chroma
 from config.llm_gateway import EMBEDDING_MODEL
 from itertools import batched
-from tools.gen_unique_ids import generate_unique_ids
+from utils.gen_unique_ids import generate_unique_ids
 from collections import defaultdict
 import logging
 
