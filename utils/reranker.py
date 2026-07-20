@@ -8,7 +8,7 @@ def _get_reranker():
     global reranker
     if reranker is None:
         reranker = CrossEncoder(
-            "BAAI/bge-reranker-v2-m3",
+            "cross-encoder/ms-marco-MiniLM-L-6-v2",
             trust_remote_code=True,
         )
     return reranker
@@ -34,6 +34,29 @@ def rerank_documents(query: str, docs: list[Document], top_k: int = 5):
     )
 
     return [doc for _, doc in ranked[:top_k]]
+
+
+def build_context(docs: list[Document]) -> str:
+    """
+    Convert reranked Documents into JSON
+    that is passed to the LLM.
+    """
+
+    context = []
+
+    for doc in docs:
+        context.append(
+            {
+                "chunk_id": doc.metadata.get("chunk_id"),
+                "form": doc.metadata.get("form"),
+                "section": doc.metadata.get("section"),
+                "accession_number": doc.metadata.get("accession_number"),
+                "text": doc.page_content,
+            }
+        )
+
+    return context
+
 
 
 if __name__ == "__main__":

@@ -8,10 +8,11 @@ from prompts.worker_prompts import (
     management_prompt,
 )
 from prompts.specific_prompt import SPECIFIC_PROMPT
+from utils.reranker import build_context, rerank_documents
 
 WORKER_CONFIG = {
     "revenue_agent": {
-        "k": 3,
+        "k": 20,
         
         "forms": ["10-K", "10-Q"],
         "sections": [
@@ -23,7 +24,7 @@ WORKER_CONFIG = {
     },
 
     "profitability_agent": {
-        "k": 3,
+        "k": 20,
         
         "forms": ["10-K", "10-Q"],
         "sections": [
@@ -35,7 +36,7 @@ WORKER_CONFIG = {
     },
 
     "liquidity_agent": {
-        "k": 3,
+        "k": 20,
         
         
         "forms": ["10-K", "10-Q"],
@@ -48,7 +49,7 @@ WORKER_CONFIG = {
     },
 
     "risk_agent": {
-        "k": 3,
+        "k": 20,
         "forms": ["10-K", "10-Q"],
         
         "sections": [
@@ -60,7 +61,7 @@ WORKER_CONFIG = {
     },
 
     "management_agent": {
-        "k": 3,
+        "k": 20,
         "forms": ["10-K", "10-Q"],
         
         "sections": [
@@ -135,13 +136,12 @@ class WorkerAgent:
 
         docs = retriever.invoke(self.retrieval_query)  #pass the retrieval query here to get the documents 
 
-        context = [{
-            "chunk_id":d.metadata["chunk_id"],
-            "form": d.metadata["form"],
-            "section":d.metadata["section"],
-            "accession_number":d.metadata["accession_number"],
-            "doc": d.page_content
-        } for d in docs]
+        docs = rerank_documents(
+            query = self.retrieval_query,
+            docs = docs,
+            top_k = 5
+        )
+        context = build_context(docs)        
         
         return context
      
