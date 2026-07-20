@@ -11,8 +11,20 @@ class queryDecompose(BaseModel):
     requested_sections: List[Literal["revenue", "profitability", "liquidity", "risk", "management"]] = Field(default_factory=list)
     optimized_query: str
 
+##############################################
+class Citation(BaseModel):
+    form: str
+    section: str
+    accession_number: int
+    
+class Finding(BaseModel):
+    claim: str
+    explanation: Optional[str] = None
+    citations: List[Citation]
+    
 
 class sectionOutput(BaseModel):
     """LLM generation for section-wise answer"""
-    heading: str
-    content: str
+    section: str
+    findings: List[Finding]
+

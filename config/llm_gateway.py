@@ -1,4 +1,4 @@
-import os
+import json
 from dotenv import load_dotenv
 load_dotenv()
 from threading import Semaphore
@@ -36,6 +36,9 @@ def querydecomposer(query):
     
 
 def generate_section(user_query, context, section, company, section_prompt):
+
+    context_json = json.dumps(context, indent=2)
+   
     with llm_semaphore:
         response = invoke_llm(
             model = MODEL1,
@@ -44,12 +47,19 @@ def generate_section(user_query, context, section, company, section_prompt):
             messages=[
                 {"role":"system",
                 "content": """
-                You are a financial expert analysis assistant tasked to write a grounded answer based on financial SEC filings and financial statements
-                Respond ONLY with valid JSON.
+                You are an information extraction system for SEC filings.
+
+                Your job is to extract factual financial findings from the provided evidence.
+
+                Do not answer conversationally.
+                Do not write paragraphs.
+                Do not explain the schema.
+                Populate every field required by the response schema.
+                Return only valid JSON matching the schema.
                 """},
                 {"role":"user",
                 "content": f"""
-                    {section_prompt}
+                    {section_prompt} 
 
                     User Question:
                     {user_query}
@@ -61,7 +71,9 @@ def generate_section(user_query, context, section, company, section_prompt):
                     {company}
 
                     Context:
-                    {context}"""}],
+                    {context_json}
+                    
+                    """}],
             response_format = sectionOutput
             )
         

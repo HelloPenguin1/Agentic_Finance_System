@@ -11,7 +11,7 @@ from prompts.specific_prompt import SPECIFIC_PROMPT
 
 WORKER_CONFIG = {
     "revenue_agent": {
-        "k": 15,
+        "k": 3,
         
         "forms": ["10-K", "10-Q"],
         "sections": [
@@ -23,7 +23,7 @@ WORKER_CONFIG = {
     },
 
     "profitability_agent": {
-        "k": 15,
+        "k": 3,
         
         "forms": ["10-K", "10-Q"],
         "sections": [
@@ -35,7 +35,7 @@ WORKER_CONFIG = {
     },
 
     "liquidity_agent": {
-        "k": 15,
+        "k": 3,
         
         
         "forms": ["10-K", "10-Q"],
@@ -48,7 +48,7 @@ WORKER_CONFIG = {
     },
 
     "risk_agent": {
-        "k": 15,
+        "k": 3,
         "forms": ["10-K", "10-Q"],
         
         "sections": [
@@ -60,7 +60,7 @@ WORKER_CONFIG = {
     },
 
     "management_agent": {
-        "k": 15,
+        "k": 3,
         "forms": ["10-K", "10-Q"],
         
         "sections": [
@@ -124,7 +124,7 @@ class WorkerAgent:
 
         return {"$and": filters}
 
-    def retrieve_and_generate(self, state):
+    def retrieve(self, state):
         #Retrieval Generation
         retriever = self.vectorstore.as_retriever(
             search_kwargs={
@@ -135,8 +135,18 @@ class WorkerAgent:
 
         docs = retriever.invoke(self.retrieval_query)  #pass the retrieval query here to get the documents 
 
-        context = "\n\n".join(doc.page_content for doc in docs) #possibly optimize this with contextual compressor
-
+        context = [{
+            "chunk_id":d.metadata["chunk_id"],
+            "form": d.metadata["form"],
+            "section":d.metadata["section"],
+            "accession_number":d.metadata["accession_number"],
+            "doc": d.page_content
+        } for d in docs]
+        
+        return context
+    
+    
+    def generate(self, context, state):
         #Generation only 
         output = generate_section(
             user_query=state["messages"][-1].content,
@@ -164,15 +174,19 @@ def run_worker(worker_name: str, section_name: str, state):
         state=state,
     )
 
-    output = agent.retrieve_and_generate(state)
+    context = agent.retrieve(state)
+    
+    output = agent.generate(context, state)
+    
 
     return {
+        "retrieved_docs": context,
         "completed_sections": [
             {
-                "section": output.heading,
-                "content": output.content,
+                "section": output.section,
+                "findings": output.findings, #internally contains citations and claims
             }
-        ]
+        ],
     }
 
 
