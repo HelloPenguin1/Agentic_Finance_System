@@ -39,7 +39,7 @@ def generate_section(user_query, context, section, company, section_prompt):
     with llm_semaphore:
         response = invoke_llm(
             model = MODEL1,
-            max_completion_tokens=800,
+            max_completion_tokens=1024,
             temperature=0.3,
             messages=[
                 {"role":"system",

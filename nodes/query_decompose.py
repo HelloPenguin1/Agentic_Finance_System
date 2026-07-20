@@ -12,7 +12,7 @@ def QueryDecompose(state: GraphState):
     # #Set sections to 'all' workers if report is asked
     # if output.intent=="report":
     #    output.requested_sections = all_sections
-        
+    
     return {
         "company": resolve_company(output.company),
         "start_year": output.start_year,

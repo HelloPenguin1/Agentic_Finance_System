@@ -11,7 +11,7 @@ from prompts.specific_prompt import SPECIFIC_PROMPT
 
 WORKER_CONFIG = {
     "revenue_agent": {
-        "k": 5,
+        "k": 15,
         
         "forms": ["10-K", "10-Q"],
         "sections": [
@@ -23,7 +23,7 @@ WORKER_CONFIG = {
     },
 
     "profitability_agent": {
-        "k": 5,
+        "k": 15,
         
         "forms": ["10-K", "10-Q"],
         "sections": [
@@ -35,7 +35,7 @@ WORKER_CONFIG = {
     },
 
     "liquidity_agent": {
-        "k": 5,
+        "k": 15,
         
         
         "forms": ["10-K", "10-Q"],
@@ -48,7 +48,7 @@ WORKER_CONFIG = {
     },
 
     "risk_agent": {
-        "k": 5,
+        "k": 15,
         "forms": ["10-K", "10-Q"],
         
         "sections": [
@@ -60,7 +60,7 @@ WORKER_CONFIG = {
     },
 
     "management_agent": {
-        "k": 5,
+        "k": 15,
         "forms": ["10-K", "10-Q"],
         
         "sections": [
