@@ -1,5 +1,5 @@
 from vectordb.vectorstore import get_vectorstore
-from config.llm_gateway import generate_section
+from config.llm_gateway import generate_llm_findings
 from prompts.worker_prompts import (
     revenue_prompt,
     profitability_prompt,
@@ -144,11 +144,10 @@ class WorkerAgent:
         context = build_context(docs)        
         
         return context
-     
-    
-    def generate(self, context, state):
-        #Generation only 
-        output = generate_section(
+
+    def generate_findings(self, context, state):
+        #Generation only
+        output = generate_llm_findings(
             user_query=state["messages"][-1].content,
             context=context,
             section=self.section_name,
@@ -176,7 +175,7 @@ def run_worker(worker_name: str, section_name: str, state):
 
     context = agent.retrieve(state)
     
-    output = agent.generate(context, state)
+    output = agent.generate_findings(context, state)
     
 
     return {

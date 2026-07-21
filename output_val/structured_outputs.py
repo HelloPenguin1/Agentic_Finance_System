@@ -15,7 +15,7 @@ class queryDecompose(BaseModel):
 class Citation(BaseModel):
     form: str
     section: str
-    accession_number: int
+    accession_number: str
     
 class Finding(BaseModel):
     claim: str
@@ -28,3 +28,7 @@ class sectionOutput(BaseModel):
     section: str
     findings: List[Finding]
 
+class final_answer(BaseModel):
+    """LLM aggregates completed section findings and returns final answer"""
+    content: str
+    citations: List[Citation]

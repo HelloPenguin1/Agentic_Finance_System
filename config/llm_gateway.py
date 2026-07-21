@@ -3,17 +3,20 @@ from dotenv import load_dotenv
 load_dotenv()
 from threading import Semaphore
 from litellm import completion
-from output_val.structured_outputs import queryDecompose, sectionOutput
+from pydantic import ValidationError
+from output_val.structured_outputs import queryDecompose, sectionOutput, final_answer
 from prompts.query_prompt import query_prompt
+from prompts.system_prompt import SYSTEM_PROMPT1, SYSTEM_PROMPT2
 from langchain_openai import OpenAIEmbeddings
 from langsmith import traceable
 import logging
 
 MODEL1 = "groq/openai/gpt-oss-20b"
+MODEL2 = "groq/llama-3.3-70b-versatile"
 EMBEDDING_MODEL = OpenAIEmbeddings(model="text-embedding-3-small")
 
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 llm_semaphore = Semaphore(2)
 
 
@@ -35,7 +38,7 @@ def querydecomposer(query):
         response.choices[0].message.content)
     
 
-def generate_section(user_query, context, section, company, section_prompt):
+def generate_llm_findings(user_query, context, section, company, section_prompt):
 
     context_json = json.dumps(context, indent=2)
    
@@ -46,39 +49,49 @@ def generate_section(user_query, context, section, company, section_prompt):
             temperature=0.3,
             messages=[
                 {"role":"system",
-                "content": """
-                You are an information extraction system for SEC filings.
-
-                Your job is to extract factual financial findings from the provided evidence.
-
-                Do not answer conversationally.
-                Do not write paragraphs.
-                Do not explain the schema.
-                Populate every field required by the response schema.
-                Return only valid JSON matching the schema.
-                """},
+                "content": SYSTEM_PROMPT1},
                 {"role":"user",
                 "content": f"""
-                    {section_prompt} 
+                {section_prompt} 
 
-                    User Question:
-                    {user_query}
+                User Question:
+                {user_query}
 
-                    Topic:
-                    {section}
+                Topic:
+                {section}
 
-                    Company:
-                    {company}
+                Company:
+                {company}
 
-                    Context:
-                    {context_json}
-                    
-                    """}],
+                Context:
+                {context_json}"""}],
             response_format = sectionOutput
             )
         
         return sectionOutput.model_validate_json(response.choices[0].message.content)
     
+    
+def aggregate_findings(user_query, completed_sections):
+    response = invoke_llm(
+        model = MODEL2,
+        max_completion_tokens = 1024,
+        temperature = 0.3,
+        messages = [
+            {'role': 'system',
+                "content": SYSTEM_PROMPT2 },
+            {'role':'user',
+                'content': f"""
+                User Question:
+                {user_query}
+                
+                Agent outputs:
+                {completed_sections}
+                
+                Your complete response:
+                """}],
+        response_format = final_answer
+    )
+    return final_answer.model_validate_json(response.choices[0].message.content)
     
 
 def main():

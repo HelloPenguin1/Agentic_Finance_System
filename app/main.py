@@ -12,7 +12,7 @@ from graph.workflow import workflow
 from vectordb.vectorstore import clear_vectorstore
 
 app = FastAPI(
-    title="Multi-Agent Finance Assistant",
+    title="Multi-Agent SEC Filing Intelligence Assistant",
     version="1.0.0"
 )
 

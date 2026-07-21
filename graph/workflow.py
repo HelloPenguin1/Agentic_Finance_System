@@ -4,6 +4,7 @@ from .state import GraphState
 from nodes.query_decompose import QueryDecompose
 from nodes.constructDB import Construct_DB
 from nodes.workers import revenue_agent, profitability_agent, liquidity_agent, management_agent, risk_agent
+from nodes.synthesizer import synthesizer_agent
 from nodes.assign_workers import assign_workers
 import psycopg
 from psycopg.rows import dict_row
@@ -32,6 +33,8 @@ workflow.add_node("profitability_agent", profitability_agent)
 workflow.add_node("risk_agent", risk_agent)
 workflow.add_node("management_agent", management_agent)
 workflow.add_node("liquidity_agent", liquidity_agent)
+workflow.add_node("synthesizer_agent", synthesizer_agent)
+
 
 
 #Edge Defintion
@@ -45,11 +48,12 @@ workflow.add_conditional_edges("constructdb",
                                 "management_agent", 
                                 "risk_agent"]) 
                                
-workflow.add_edge("revenue_agent", END)
-workflow.add_edge("liquidity_agent", END)
-workflow.add_edge("profitability_agent", END)
-workflow.add_edge("management_agent", END)
-workflow.add_edge("risk_agent", END)
+workflow.add_edge("revenue_agent", "synthesizer_agent")
+workflow.add_edge("liquidity_agent", "synthesizer_agent")
+workflow.add_edge("profitability_agent", "synthesizer_agent")
+workflow.add_edge("management_agent", "synthesizer_agent")
+workflow.add_edge("risk_agent", "synthesizer_agent")
+workflow.add_edge("synthesizer_agent", END)
 
 # checkpointer = PostgresSaver(conn)
 # checkpointer.setup()
