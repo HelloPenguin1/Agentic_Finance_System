@@ -1,0 +1,57 @@
+==================================================================================================
+
+Sample Queries
+Revenue
+What factors did Apple attribute to its revenue growth in fiscal year 2020?
+What did Apple state about the performance of its Services business?
+How did Apple explain the increase in Mac sales during 2020?
+Which product segments contributed most to revenue growth according to management?
+Profitability
+What factors did Apple cite for changes in gross margin?
+How did Apple explain changes in operating expenses during 2020?
+What did management disclose about research and development spending?
+What explanations did Apple provide for changes in profitability during fiscal year 2020?
+Liquidity
+What did Apple disclose about its cash position?
+How did Apple describe its capital allocation strategy?
+What did Apple say about share repurchases and dividends?
+What factors affected Apple's operating cash flow according to management?
+Risk
+What were Apple's major business risks in fiscal year 2020?
+What did Apple disclose about supply chain risks?
+What cybersecurity risks were discussed?
+What regulatory risks did Apple identify?
+Management & Strategy
+What did Apple state about investments in artificial intelligence?
+What did management say about future growth opportunities?
+What strategic priorities did Apple discuss in the annual report?
+What initiatives did Apple highlight for long-term business growth?
+Good report queries
+
+Instead of
+
+Tell me everything about Apple.
+
+Use
+
+Generate a financial report summarizing Apple's revenue, profitability, liquidity, management discussion, and risk factors for fiscal year 2020.
+
+or
+
+Summarize Apple's annual report for fiscal year 2020.
+
+or
+
+Generate an SEC filing analysis for Apple's 2020 Form 10-K.
+
+Good comparison queries
+
+Your architecture also naturally supports things like:
+
+Compare Apple's business risks between 2020 and 2022.
+Compare management's discussion of Services revenue between 2021 and 2023.
+Compare Apple's capital allocation strategy between 2019 and 2023.
+How did Apple's discussion of AI evolve between 2022 and 2024?
+Compare Apple's R&D disclosures across the last three annual reports.
+
+These fit SEC filings very well because they compare what management disclosed over time.

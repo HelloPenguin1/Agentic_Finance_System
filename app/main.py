@@ -1,45 +1,95 @@
+"""FastAPI entry point for the Agentic SEC Filing Analysis Assistant."""
+
 import sys
 from pathlib import Path
+from typing import Any, List
+
+from fastapi import FastAPI, HTTPException, status
+from langchain_core.messages import HumanMessage
+from pydantic import BaseModel, Field
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from fastapi import FastAPI
-from pydantic import BaseModel
-from langchain_core.messages import HumanMessage
 from graph.workflow import workflow
 from vectordb.vectorstore import clear_vectorstore
 
+
 app = FastAPI(
-    title="Multi-Agent SEC Filing Intelligence Assistant",
-    version="1.0.0"
+    title="Agentic SEC Filing Analysis Assistant",
+    version="1.0.0",
 )
 
+
 class QueryRequest(BaseModel):
-    user_question: str
+    """A natural-language question about SEC filings."""
+
+    query: str = Field(min_length=1)
+
+
+class Citation(BaseModel):
+    """Source metadata for an SEC filing disclosure."""
+
+    form: str
+    section: str
+    accession_number: str
+
+
+class AnalyzeResponse(BaseModel):
+    """The synthesized graph answer and its supporting citations."""
+
+    answer: str
+    citations: List[Citation]
+
 
 @app.get("/")
-async def read_root():
-    return {'message':'Welcome'}
+def read_root() -> dict[str, str]:
+    """Return a welcome message."""
+    return {"message": "Agentic SEC Filing Analysis Assistant API"}
 
-@app.post("/query")
-async def user_query(query: QueryRequest):
-    result = workflow.invoke(
-        {'messages': [HumanMessage(content=query.user_question)]}
-        ,
-        config={
-            "configurable":{
-                "thread_id": "demo-user"
-            }
-        }
-        )
-    return {'result': result.get("completed_sections")} 
+
+@app.get("/health")
+def health_check() -> dict[str, str]:
+    """Confirm that the API is running."""
+    return {"status": "healthy"}
+
 
 @app.post("/clear_vectorstore")
-async def clear_vectorstore_endpoint():
+def clear_vectorstore_endpoint() -> dict[str, str]:
+    """Remove the stored vector database contents."""
     return {"message": clear_vectorstore()}
 
 
-    
-    
+@app.post("/query", response_model=AnalyzeResponse)
+def query_filings(request: QueryRequest) -> AnalyzeResponse:
+    """Run the compiled LangGraph workflow for a financial question."""
+    try:
+        result = workflow.invoke({"messages": [HumanMessage(content=request.query)]})
+        final_response: Any = result.get("final_response")
+
+        if not final_response:
+            return AnalyzeResponse(
+                answer="No relevant disclosures were found.", citations=[]
+            )
+
+        if isinstance(final_response, dict):
+            answer = final_response.get("content", "")
+            raw_citations = final_response.get("citations", [])
+        else:
+            answer = getattr(final_response, "content", "")
+            raw_citations = getattr(final_response, "citations", [])
+
+        if not answer:
+            return AnalyzeResponse(
+                answer="No relevant disclosures were found.", citations=[]
+            )
+
+        return AnalyzeResponse(answer=answer, citations=raw_citations)
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to process the query. Please try again later.",
+        ) from None
