@@ -13,17 +13,21 @@ from langchain_core.messages import AnyMessage
 class Citation(TypedDict):
     form: str
     section: str
-    accession_number: int
+    accession_number: str
 
 class Finding(TypedDict):
     claim: str
     explanation: Optional[str] = None
     citations: List[Citation]
 
-class SectionOutput(TypedDict):
+class SectionOutput(TypedDict): 
     section: str
     findings: List[Finding]
 
+class final_answer(TypedDict):
+    """LLM aggregates completed section findings and returns final answer"""
+    content: str
+    citations: List[Citation]
 
 # GRAPH STATE 
     
@@ -32,7 +36,7 @@ class GraphState(TypedDict):
     messages: Annotated[List[AnyMessage], add_messages]
     start_year: Optional[str]
     end_year: Optional[str] = None
-    company: List[str]
+    company: str
     intent: Literal["report", "specific"] = None
 
     optimized_query: str  # query rewriter
@@ -43,3 +47,4 @@ class GraphState(TypedDict):
         operator.add
     ]
     
+    final_response: final_answer
