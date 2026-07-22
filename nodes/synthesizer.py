@@ -6,6 +6,9 @@ def synthesizer_agent(state):
     output = aggregate_findings(latest_query, completed_sections)
 
     return {
-        'final_response': output 
+        'final_response': {
+            'content': output.content,
+            'citations': output.citations,
+        }
     }
 

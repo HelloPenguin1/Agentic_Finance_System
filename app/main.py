@@ -13,6 +13,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from graph.workflow import workflow
+from output_val.structured_outputs import Citation
 from vectordb.vectorstore import clear_vectorstore
 
 
@@ -26,14 +27,6 @@ class QueryRequest(BaseModel):
     """A natural-language question about SEC filings."""
 
     query: str = Field(min_length=1)
-
-
-class Citation(BaseModel):
-    """Source metadata for an SEC filing disclosure."""
-
-    form: str
-    section: str
-    accession_number: str
 
 
 class AnalyzeResponse(BaseModel):
@@ -85,11 +78,7 @@ def query_filings(request: QueryRequest) -> AnalyzeResponse:
                 answer="No relevant disclosures were found.", citations=[]
             )
 
-        return AnalyzeResponse(answer=answer, citations=raw_citations)
-    except HTTPException:
+        return AnalyzeResponse(answer=answer, citations=raw_citations or [])
+    except Exception as e:
+        print(e)
         raise
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Unable to process the query. Please try again later.",
-        ) from None
