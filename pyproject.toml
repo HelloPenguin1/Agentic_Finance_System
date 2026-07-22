@@ -197,6 +197,7 @@ dependencies = [
     "ragas==0.4.3",
     "rank-bm25==0.2.2",
     "rapidfuzz==3.14.5",
+    "redis>=8.0.1",
     "referencing==0.37.0",
     "regex==2026.4.4",
     "requests==2.33.1",
