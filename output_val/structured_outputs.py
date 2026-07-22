@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Literal, List, Optional
-
+from dataclasses import dataclass
 
 class queryDecompose(BaseModel):
     """Structured output for query llm"""
@@ -32,3 +32,16 @@ class final_answer(BaseModel):
     """LLM aggregates completed section findings and returns final answer"""
     content: str
     citations: List[Citation]
+    
+##################################################
+
+@dataclass
+class SearchFilter:
+    """Metadata constraints supported by Redis vector search."""
+
+    ticker: str | None = None
+    forms: list[str] | None = None
+    sections: list[str] | None = None
+    source: str | None = None
+    start_year: int | None = None
+    end_year: int | None = None    

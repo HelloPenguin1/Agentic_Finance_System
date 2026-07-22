@@ -14,7 +14,7 @@ if str(ROOT_DIR) not in sys.path:
 
 from graph.workflow import workflow
 from output_val.structured_outputs import Citation
-from vectordb.vectorstore import clear_vectorstore
+from vectordb.redis import redis_store
 
 
 app = FastAPI(
@@ -49,9 +49,9 @@ def health_check() -> dict[str, str]:
 
 
 @app.post("/clear_vectorstore")
-def clear_vectorstore_endpoint() -> dict[str, str]:
+def clear_redis_store_endpoint() -> dict[str, str]:
     """Remove the stored vector database contents."""
-    return {"message": clear_vectorstore()}
+    return {"message": redis_store.clear()}
 
 
 @app.post("/query", response_model=AnalyzeResponse)

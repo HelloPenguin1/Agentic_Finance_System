@@ -1,6 +1,6 @@
 from utils.fetch_filings import FilingFetcher
 from utils.convert_filings import filings_to_langchain_docs
-from vectordb.vectorstore import vectordb_store, get_vectorstore
+from vectordb.redis import redis_store
 
 class Construct_DB:
     def __init__(self):
@@ -24,8 +24,8 @@ class Construct_DB:
             
         chunks = filings_to_langchain_docs(filings=filings, ticker=state["company"])
         
-        vectordb = get_vectorstore()
-        vectordb_store(vectordb, chunks)
+        redis_store.create_index()
+        redis_store.add_documents(chunks)
         
         return { }
 

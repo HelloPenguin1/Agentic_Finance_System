@@ -1,4 +1,4 @@
-from vectordb.vectorstore import get_vectorstore
+from vectordb.redis import SearchFilter, redis_store
 from config.llm_gateway import generate_llm_findings
 from prompts.worker_prompts import (
     revenue_prompt,
@@ -9,6 +9,7 @@ from prompts.worker_prompts import (
 )
 from prompts.specific_prompt import SPECIFIC_PROMPT
 from utils.reranker import build_context, rerank_documents
+from output_val.structured_outputs import SearchFilter
 
 WORKER_CONFIG = {
     "revenue_agent": {
@@ -81,8 +82,6 @@ REPORT_PROMPTS = {
 
 class WorkerAgent:
     def __init__(self, section_name, config, prompt, state):
-        self.vectorstore = get_vectorstore()
-
         self.section_name = section_name
         self.retrieval_query = state["optimized_query"]  #retriever only sees this
         
@@ -102,39 +101,22 @@ class WorkerAgent:
         self.company = state["company"]
         
     def build_filter(self):
-        filters = [
-            {"ticker": self.company},
-            {"form": {"$in": self.forms}},
-            {"section": {"$in": self.sections}},
-            {"source": "SEC"},
-        ]
-
-        if self.start_year == self.end_year:
-            filters.append(
-                {"filing_year": self.start_year}
-            )
-        else:
-            filters.append(
-                {
-                    "filing_year": {
-                        "$gte": self.start_year,
-                        "$lte": self.end_year,
-                    }
-                }
-            )
-
-        return {"$and": filters}
+        return SearchFilter(
+            ticker=self.company,
+            forms=self.forms,
+            sections=self.sections,
+            source="SEC",
+            start_year=self.start_year,
+            end_year=self.end_year,
+        )
 
     def retrieve(self, state):
         #Retrieval Generation
-        retriever = self.vectorstore.as_retriever(
-            search_kwargs={
-                "k": self.k,
-                "filter": self.build_filter(), #for metadata filtering
-            }
+        docs = redis_store.similarity_search(
+            query=self.retrieval_query,
+            k=self.k,
+            filter=self.build_filter(),
         )
-
-        docs = retriever.invoke(self.retrieval_query)  #pass the retrieval query here to get the documents 
 
         docs = rerank_documents(
             query = self.retrieval_query,

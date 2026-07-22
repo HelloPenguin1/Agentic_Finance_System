@@ -55,3 +55,24 @@ How did Apple's discussion of AI evolve between 2022 and 2024?
 Compare Apple's R&D disclosures across the last three annual reports.
 
 These fit SEC filings very well because they compare what management disclosed over time.
+
+
+
+
+
+
+----------------------------------------------------------------------------
+
+Typical daily workflow
+
+Terminal 1
+
+docker start redis-stack  - for local development
+
+Terminal 2
+
+uv run uvicorn main:app --reload
+
+Terminal 3 (if using Streamlit)
+
+uv run streamlit run app.py
