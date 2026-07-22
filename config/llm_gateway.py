@@ -9,11 +9,14 @@ from prompts.query_prompt import query_prompt
 from prompts.system_prompt import SYSTEM_PROMPT1, SYSTEM_PROMPT2
 from langchain_openai import OpenAIEmbeddings
 from langsmith import traceable
+from sentence_transformers import CrossEncoder
 import logging
 
 MODEL1 = "groq/openai/gpt-oss-20b"
 MODEL2 = "groq/llama-3.3-70b-versatile"
 EMBEDDING_MODEL = OpenAIEmbeddings(model="text-embedding-3-small")
+RERANKER_MDOEL = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2",trust_remote_code=True,)
+
 
 
 logger = logging.getLogger(__name__)
