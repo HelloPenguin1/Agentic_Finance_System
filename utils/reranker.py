@@ -1,18 +1,5 @@
-from sentence_transformers import CrossEncoder
 from langchain_core.documents import Document
-
-reranker = None
-
-
-def _get_reranker():
-    global reranker
-    if reranker is None:
-        reranker = CrossEncoder(
-            "cross-encoder/ms-marco-MiniLM-L-6-v2",
-            trust_remote_code=True,
-        )
-    return reranker
-
+from config.llm_gateway import RERANKER_MDOEL
 
 def rerank_documents(query: str, docs: list[Document], top_k: int = 5):
     """
@@ -25,7 +12,7 @@ def rerank_documents(query: str, docs: list[Document], top_k: int = 5):
         return []
 
     pairs = [(query, doc.page_content) for doc in docs]
-    scores = _get_reranker().predict(pairs)
+    scores = RERANKER_MDOEL.predict(pairs)
 
     ranked = sorted(
         zip(scores, docs),
