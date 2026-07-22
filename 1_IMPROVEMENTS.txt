@@ -38,3 +38,11 @@ SOl:
 ## Add ability for multi user with multi threads so that each user have distinct conversations
 
 ##Add Cache for same conversatiosn
+
+
+I started with ChromaDB because it was easy to prototype with. As the project evolved, I migrated to Redis Stack.
+ My assistant retrieves SEC filings based on metadata like company, filing type, and year before performing vector search, 
+ and Redis supports efficient metadata filtering together with HNSW vector indexing. It also gives me a production-ready 
+ datastore that I can later use for retrieval caching and conversational state, so I don't need separate systems for 
+ vectors and caching. The retrieval quality still 
+comes from my embeddings and cross-encoder reranker, while Redis improves the serving infrastructure and scalability.

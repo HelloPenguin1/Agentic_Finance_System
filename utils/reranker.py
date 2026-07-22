@@ -1,5 +1,5 @@
 from langchain_core.documents import Document
-from config.llm_gateway import RERANKER_MDOEL
+from config.llm_gateway import get_reranker_model
 
 def rerank_documents(query: str, docs: list[Document], top_k: int = 5):
     """
@@ -12,7 +12,7 @@ def rerank_documents(query: str, docs: list[Document], top_k: int = 5):
         return []
 
     pairs = [(query, doc.page_content) for doc in docs]
-    scores = RERANKER_MDOEL.predict(pairs)
+    scores = get_reranker_model().predict(pairs)
 
     ranked = sorted(
         zip(scores, docs),

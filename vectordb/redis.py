@@ -11,6 +11,10 @@ from langchain_core.documents import Document
 from output_val.structured_outputs import SearchFilter
 
 
+
+
+        
+
 class RedisVectorStore:
     def __init__(
         self,host="localhost",port=6379,index_name="sec-edgar", embedding = None):
@@ -49,6 +53,21 @@ class RedisVectorStore:
         self.embedding = embedding or EMBEDDING_MODEL
         
         
+        
+        
+    @staticmethod
+    def _escape_tag(value):
+        return re.sub(r"([,.<>\{\}\[\]\"':;!@#\$%\^&*()\-+=~\s])", r"\\\1", str(value))
+
+    @staticmethod
+    def _decode(value):
+        return value.decode("utf-8") if isinstance(value, bytes) else value
+    
+    
+    
+    
+    
+
     def create_index(self):
         try:
             self.client.ft(self.index_name).info()
@@ -88,14 +107,6 @@ class RedisVectorStore:
                     "chunk_id": doc.metadata.get("chunk_id", 0),
                     "embedding": embedding.tobytes(),
                 },)
-
-    @staticmethod
-    def _escape_tag(value):
-        return re.sub(r"([,.<>\{\}\[\]\"':;!@#\$%\^&*()\-+=~\s])", r"\\\1", str(value))
-
-    @staticmethod
-    def _decode(value):
-        return value.decode("utf-8") if isinstance(value, bytes) else value
 
     def _build_filter_query(self, filter: SearchFilter | None):
         if not filter:
