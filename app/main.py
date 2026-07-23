@@ -2,19 +2,23 @@
 
 import sys
 from pathlib import Path
-from typing import Any, List
+from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException, status
-from langchain_core.messages import HumanMessage
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from graph.workflow import workflow
 from output_val.structured_outputs import Citation
+from services.query import answer_query
 from vectordb.vectorstore import clear_vectorstore
+from nodes.constructDB import ConstructDB
+
+
+
+construct_db = ConstructDB()
 
 
 app = FastAPI(
@@ -29,11 +33,27 @@ class QueryRequest(BaseModel):
     query: str = Field(min_length=1)
 
 
+class IngestRequest(BaseModel):
+    """A company and filing year to ingest from SEC Edgar."""
+
+    company: str = Field(min_length=1)
+    filing_year: Optional[int] = None
+    filing_start_year: Optional[int] = None
+    filing_end_year: Optional[int] = None
+
+
 class AnalyzeResponse(BaseModel):
     """The synthesized graph answer and its supporting citations."""
 
     answer: str
     citations: List[Citation]
+
+
+class IngestResponse(BaseModel):
+    """The result of an ingestion request."""
+
+    message: str
+    chunks_indexed: int
 
 
 @app.get("/")
@@ -56,29 +76,24 @@ def clear_vectorstore_endpoint() -> dict[str, str]:
 
 @app.post("/query", response_model=AnalyzeResponse)
 def query_filings(request: QueryRequest) -> AnalyzeResponse:
-    """Run the compiled LangGraph workflow for a financial question."""
-    try:
-        result = workflow.invoke({"messages": [HumanMessage(content=request.query)]})
-        final_response: Any = result.get("final_response")
+    """Answer a question using previously ingested SEC filing chunks."""
+    return AnalyzeResponse(**answer_query(request.query))
 
-        if not final_response:
-            return AnalyzeResponse(
-                answer="No relevant disclosures were found.", citations=[]
-            )
 
-        if isinstance(final_response, dict):
-            answer = final_response.get("content", "")
-            raw_citations = final_response.get("citations", [])
-        else:
-            answer = getattr(final_response, "content", "")
-            raw_citations = getattr(final_response, "citations", [])
+@app.post("/ingest", response_model=IngestResponse)
+def ingest_filings(request: IngestRequest) -> IngestResponse:
+    """Retrieve, chunk, embed, and index one company's SEC filings."""
+    filing_year = request.filing_year or request.filing_start_year
 
-        if not answer:
-            return AnalyzeResponse(
-                answer="No relevant disclosures were found.", citations=[]
-            )
+    if filing_year is None:
+        raise HTTPException(status_code=400, detail="Provide filing_year or filing_start_year.")
 
-        return AnalyzeResponse(answer=answer, citations=raw_citations or [])
-    except Exception as e:
-        print(e)
-        raise
+    chunk_count = construct_db.build_vectordb(
+        company=request.company,
+        filing_year=filing_year,
+    )
+
+    return {
+        "message": "Ingestion completed successfully.",
+        "chunks_indexed": chunk_count,
+    }

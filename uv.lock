@@ -62,6 +62,7 @@ dependencies = [
     { name = "docstring-parser" },
     { name = "durationpy" },
     { name = "edgartools" },
+    { name = "einops" },
     { name = "executing" },
     { name = "fastapi", extra = ["standard"] },
     { name = "filelock" },
@@ -123,7 +124,6 @@ dependencies = [
     { name = "langchain-huggingface" },
     { name = "langchain-litellm" },
     { name = "langchain-ollama" },
-    { name = "langchain-openai" },
     { name = "langchain-qdrant" },
     { name = "langchain-text-splitters" },
     { name = "langgraph" },
@@ -162,7 +162,6 @@ dependencies = [
     { name = "oauthlib" },
     { name = "ollama" },
     { name = "onnxruntime" },
-    { name = "openai" },
     { name = "opentelemetry-api" },
     { name = "opentelemetry-exporter-otlp-proto-common" },
     { name = "opentelemetry-exporter-otlp-proto-grpc" },
@@ -319,6 +318,7 @@ requires-dist = [
     { name = "docstring-parser", specifier = "==0.18.0" },
     { name = "durationpy", specifier = "==0.10" },
     { name = "edgartools", specifier = "==5.30.0" },
+    { name = "einops", specifier = ">=0.8.2" },
     { name = "executing", specifier = "==2.2.1" },
     { name = "fastapi", extras = ["standard"], specifier = "==0.136.0" },
     { name = "filelock", specifier = "==3.28.0" },
@@ -380,7 +380,6 @@ requires-dist = [
     { name = "langchain-huggingface", specifier = "==1.2.2" },
     { name = "langchain-litellm", specifier = ">=0.6.6" },
     { name = "langchain-ollama", specifier = "==1.1.0" },
-    { name = "langchain-openai", specifier = "==1.1.14" },
     { name = "langchain-qdrant", specifier = "==1.1.0" },
     { name = "langchain-text-splitters", specifier = "==1.1.2" },
     { name = "langgraph", specifier = "==1.1.8" },
@@ -419,7 +418,6 @@ requires-dist = [
     { name = "oauthlib", specifier = "==3.3.1" },
     { name = "ollama", specifier = "==0.6.1" },
     { name = "onnxruntime", specifier = "==1.24.4" },
-    { name = "openai", specifier = "==2.32.0" },
     { name = "opentelemetry-api", specifier = "==1.41.0" },
     { name = "opentelemetry-exporter-otlp-proto-common", specifier = "==1.41.0" },
     { name = "opentelemetry-exporter-otlp-proto-grpc", specifier = "==1.41.0" },
@@ -1412,6 +1410,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f5/0f/3eef4319738029dabddc3b2f512107aa3d44b420676fdde835d6f8f6f0be/edgartools-5.30.0.tar.gz", hash = "sha256:2a699f042158cab8973862eda286c4e14aae00e4566ff82e1903bef602fca69a", size = 2883267, upload-time = "2026-04-15T22:24:14.035Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4b/a3/9eca89967dbdbca3ec25d57ad4e11fa5d4babdbca0b578fae2021e0a0663/edgartools-5.30.0-py3-none-any.whl", hash = "sha256:b3d9609e6468fa34589a190e125bbd73f7a796d6e183967e26fece0d6167741d", size = 3175428, upload-time = "2026-04-15T22:24:16.201Z" },
+]
+
+[[package]]
+name = "einops"
+version = "0.8.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/2c/77/850bef8d72ffb9219f0b1aac23fbc1bf7d038ee6ea666f331fa273031aa2/einops-0.8.2.tar.gz", hash = "sha256:609da665570e5e265e27283aab09e7f279ade90c4f01bcfca111f3d3e13f2827", size = 56261, upload-time = "2026-01-26T04:13:17.638Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2a/09/f8d8f8f31e4483c10a906437b4ce31bdf3d6d417b73fe33f1a8b59e34228/einops-0.8.2-py3-none-any.whl", hash = "sha256:54058201ac7087911181bfec4af6091bb59380360f069276601256a76af08193", size = 65638, upload-time = "2026-01-26T04:13:18.546Z" },
 ]
 
 [[package]]

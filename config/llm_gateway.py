@@ -3,20 +3,25 @@ from dotenv import load_dotenv
 load_dotenv()
 from threading import Semaphore
 from litellm import completion
-from pydantic import ValidationError
 from output_val.structured_outputs import queryDecompose, sectionOutput, final_answer
 from prompts.query_prompt import query_prompt
 from prompts.system_prompt import SYSTEM_PROMPT1, SYSTEM_PROMPT2
-from langchain_openai import OpenAIEmbeddings
 from langsmith import traceable
 from sentence_transformers import CrossEncoder
 import logging
+from langchain_huggingface import HuggingFaceEmbeddings
+
 
 MODEL1 = "groq/openai/gpt-oss-20b"
 MODEL2 = "groq/llama-3.3-70b-versatile"
-EMBEDDING_MODEL = OpenAIEmbeddings(model="text-embedding-3-small")
 RERANKER_MDOEL = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2",trust_remote_code=True,)
 
+EMBEDDING_MODEL = HuggingFaceEmbeddings(
+    model_name="BAAI/bge-small-en-v1.5",
+    encode_kwargs={'normalize_embeddings': True} # Ensures unit length vectors automatically
+)
+
+logging.basicConfig(level=logging.INFO)
 
 
 logger = logging.getLogger(__name__)
@@ -49,7 +54,7 @@ def generate_llm_findings(user_query, context, section, company, section_prompt)
         response = invoke_llm(
             model = MODEL1,
             max_completion_tokens=1024,
-            temperature=0.3,
+            temperature=0.1,
             messages=[
                 {"role":"system",
                 "content": SYSTEM_PROMPT1},
@@ -77,7 +82,6 @@ def generate_llm_findings(user_query, context, section, company, section_prompt)
 def aggregate_findings(user_query, completed_sections):
     response = invoke_llm(
         model = MODEL2,
-        max_completion_tokens = 1024,
         temperature = 0.3,
         messages = [
             {'role': 'system',
@@ -98,7 +102,6 @@ def aggregate_findings(user_query, completed_sections):
     
 
 def main():
-    
     return None
 
 if __name__ == "__main__":

@@ -90,40 +90,22 @@ class WorkerAgent:
         self.k = config["k"]
         self.forms = config["forms"]
         self.sections = config["sections"]
-        self.start_year = int(state["start_year"])
-        self.end_year = (
-            int(state["end_year"])
-            if state["end_year"] is not None
-            else self.start_year
-        )
 
-        #for answer generation
+        # Keep retrieval simple and consistent with ingestion.
+        # The query decomposer may provide year hints, but they are not used
+        # for metadata filtering here to avoid mismatches after ingestion.
         self.prompt = prompt
         self.company = state["company"]
         
     def build_filter(self):
-        filters = [
-            {"ticker": self.company},
-            {"form": {"$in": self.forms}},
-            {"section": {"$in": self.sections}},
-            {"source": "SEC"},
-        ]
-
-        if self.start_year == self.end_year:
-            filters.append(
-                {"filing_year": self.start_year}
-            )
-        else:
-            filters.append(
-                {
-                    "filing_year": {
-                        "$gte": self.start_year,
-                        "$lte": self.end_year,
-                    }
-                }
-            )
-
-        return {"$and": filters}
+        return {
+            "$and": [
+                {"ticker": self.company},
+                {"form": {"$in": self.forms}},
+                {"section": {"$in": self.sections}},
+                {"source": "SEC"},
+            ]
+        }
 
     def retrieve(self, state):
         #Retrieval Generation

@@ -7,11 +7,7 @@ def QueryDecompose(state: GraphState):
     """This node takes a user query and extracts entity infomration"""
     latest_query = state['messages'][-1].content  
     output = querydecomposer(latest_query)
-    # all_sections = ["revenue", "profitability", "risk", "management", "liquidity"]
-    
-    # #Set sections to 'all' workers if report is asked
-    # if output.intent=="report":
-    #    output.requested_sections = all_sections
+
     
     return {
         "company": resolve_company(output.company),
