@@ -11,8 +11,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from output_val.structured_outputs import Citation
-from services.query import answer_query
+from output_val.structured_outputs import Citation  
 from vectordb.vectorstore import clear_vectorstore
 from nodes.constructDB import ConstructDB
 

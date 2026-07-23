@@ -8,6 +8,8 @@ __pycache__/
 *.pyo
 *.pyd
 
+test/
+
 # Virtual environments
 .venv/
 venv/
@@ -35,7 +37,7 @@ Thumbs.db
 
 # Runtime/generated data
 chroma_db/
-output_val/
+
 logs/
 
 # Jupyter

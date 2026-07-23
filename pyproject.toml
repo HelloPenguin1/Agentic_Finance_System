@@ -169,8 +169,8 @@ dependencies = [
     "propcache==0.4.1",
     "protobuf==6.33.6",
     "psutil==7.2.2",
-    "psycopg2>=2.9.12",
-    "psycopg[binary]>=3.3.4",
+
+
     "pure-eval==0.2.3",
     "pyarrow==23.0.1",
     "pyasn1==0.6.3",
@@ -189,7 +189,7 @@ dependencies = [
     "pyrate-limiter==4.1.0",
     "python-dateutil==2.9.0.post0",
     "python-dotenv==1.2.2",
-    "pywin32==311",
+    "pywin32==311; sys_platform == 'win32'",    
     "pyyaml==6.0.3",
     "pyzmq==27.1.0",
     "qdrant-client==1.17.1",
