@@ -16,6 +16,9 @@ from services.query import answer_query
 from vectordb.vectorstore import clear_vectorstore
 from nodes.constructDB import ConstructDB
 
+from typing import Any
+from langchain_core.messages import HumanMessage
+from graph.workflow import workflow
 
 
 construct_db = ConstructDB()
@@ -77,7 +80,19 @@ def clear_vectorstore_endpoint() -> dict[str, str]:
 @app.post("/query", response_model=AnalyzeResponse)
 def query_filings(request: QueryRequest) -> AnalyzeResponse:
     """Answer a question using previously ingested SEC filing chunks."""
-    return AnalyzeResponse(**answer_query(request.query))
+    result = workflow.invoke({"messages":[HumanMessage(content=request.query)]})
+    final_response: Any = result.get("final_response")
+    if not final_response:
+        return {"answer": "No relevant disclosures were found.", "citations": []}
+    
+    answer = final_response.get("content", "")
+    citations = final_response.get("citations",[])
+    
+    if not answer:
+        return {"answer": "No relevant disclosures were found.", "citations": []}
+
+    return {"answer": answer, 
+            "citations": citations or []}
 
 
 @app.post("/ingest", response_model=IngestResponse)
