@@ -11,6 +11,9 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 _PERSIST_DIR = Path(__file__).resolve().parent.parent / "chroma_db"
+_PERSIST_DIR.mkdir(parents=True, exist_ok=True)
+
+
 BATCH_SIZE = 350  
 
 def get_vectorstore():
