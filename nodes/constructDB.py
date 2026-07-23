@@ -1,4 +1,4 @@
-from utils.convert_filings import filings_to_langchain_docs
+from utils.convert_filings_updated import filings_to_langchain_docs
 from utils.fetch_filings import FilingFetcher
 from utils.resolve_c import resolve_company
 from vectordb.vectorstore import get_vectorstore, vectordb_store

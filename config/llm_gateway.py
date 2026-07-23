@@ -63,10 +63,6 @@ def querydecomposer(query):
     
 
 def generate_llm_findings(user_query, context, company, section_prompt):
-    
-    #for debugging
-    for i, doc in enumerate(context):
-        print(i, len(doc.page_content.split()))
         
     context_json = json.dumps(context, indent=2)
    
@@ -81,7 +77,7 @@ def generate_llm_findings(user_query, context, company, section_prompt):
                 {"role":"user",
                 "content": f"""
                 {section_prompt} 
-    
+
                 User Question:
                 {user_query}
 
