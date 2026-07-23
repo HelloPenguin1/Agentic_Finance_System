@@ -1,6 +1,6 @@
 from vectordb.vectorstore import get_vectorstore
 from config.llm_gateway import generate_llm_findings
-from prompts.worker_prompts import (
+from prompts.worker_prompts2 import (
     revenue_prompt,
     profitability_prompt,
     liquidity_prompt,
@@ -80,10 +80,9 @@ REPORT_PROMPTS = {
 }
 
 class WorkerAgent:
-    def __init__(self, section_name, config, prompt, state):
+    def __init__(self, config, prompt, state):
         self.vectorstore = get_vectorstore()
 
-        self.section_name = section_name
         self.retrieval_query = state["optimized_query"]  #retriever only sees this
         
         #Arguments for retriever/build filter
@@ -132,7 +131,6 @@ class WorkerAgent:
         output = generate_llm_findings(
             user_query=state["messages"][-1].content,
             context=context,
-            section=self.section_name,
             company=self.company,
             section_prompt=self.prompt,
         )
@@ -140,7 +138,7 @@ class WorkerAgent:
         return output
 
 
-def run_worker(worker_name: str, section_name: str, state):
+def run_worker(worker_name: str, state):
     config = WORKER_CONFIG[worker_name]
     
     if state['intent']=='report':
@@ -149,7 +147,6 @@ def run_worker(worker_name: str, section_name: str, state):
         prompt = SPECIFIC_PROMPT
         
     agent = WorkerAgent(
-        section_name=section_name,
         config=config, #sets up filters for k-values and sections to retrieve
         prompt=prompt, 
         state=state,
@@ -164,7 +161,6 @@ def run_worker(worker_name: str, section_name: str, state):
         "retrieved_docs": context,
         "completed_sections": [
             {
-                "section": output.section,
                 "findings": output.findings, #internally contains citations and claims
             }
         ],
@@ -172,20 +168,20 @@ def run_worker(worker_name: str, section_name: str, state):
 
 
 def revenue_agent(state):
-    return run_worker("revenue_agent", "revenue", state)
+    return run_worker("revenue_agent", state)
 
 
 def profitability_agent(state):
-    return run_worker("profitability_agent", "profitability", state)
+    return run_worker("profitability_agent", state)
 
 
 def liquidity_agent(state):
-    return run_worker("liquidity_agent", "liquidity", state)
+    return run_worker("liquidity_agent", state)
 
 
 def risk_agent(state):
-    return run_worker("risk_agent", "risk", state)
+    return run_worker("risk_agent",state)
 
 
 def management_agent(state):
-    return run_worker("management_agent", "management", state)
+    return run_worker("management_agent", state)

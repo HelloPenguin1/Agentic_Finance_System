@@ -17,11 +17,10 @@ class Citation(TypedDict):
 
 class Finding(TypedDict):
     claim: str
-    reasoning: Optional[str] = None   #changed from explanation
+    #support: Optional[str] = None   #changed from explanation
     citations: List[Citation]
 
 class SectionOutput(TypedDict): 
-    section: str
     findings: List[Finding]
 
 class final_answer(TypedDict):

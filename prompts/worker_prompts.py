@@ -45,8 +45,6 @@ Focus on topics such as:
 - Revenue outlook if discussed
 
 Return at most FIVE findings.
-Provide a concise (2-3) line reasoning for the findings derived from the context of the retrieved documents. DO NOT output long
-arbituary paragraphs
 {COMMON_REQUIREMENTS}
 """
 
@@ -66,8 +64,6 @@ Focus on topics such as:
 - Management explanations
 
 Return at most FIVE findings.
-Provide a concise (2-3) line reasoning for the findings derived from the context of the retrieved documents. DO NOT output long
-arbituary paragraphs
 {COMMON_REQUIREMENTS}
 """
 
@@ -88,8 +84,6 @@ Focus on topics such as:
 - Overall liquidity
 
 Return at most FIVE findings.
-Provide a concise (2-3) line reasoning for the findings derived from the context of the retrieved documents. DO NOT output long
-arbituary paragraphs
 {COMMON_REQUIREMENTS}
 """
 
@@ -109,8 +103,6 @@ Focus on topics such as:
 - Customer concentration
 
 Return at most FIVE findings.
-Provide a concise (2-3) line reasoning for the findings derived from the context of the retrieved documents. DO NOT output long
-arbituary paragraphs
 {COMMON_REQUIREMENTS}
 """
 
@@ -129,8 +121,6 @@ Focus on topics such as:
 - Management outlook
 
 Return at most FIVE findings.
-Provide a concise (2-3) line reasoning for the findings derived from the context of the retrieved documents. DO NOT output long
-arbituary paragraphs
 
 {COMMON_REQUIREMENTS}
 """

@@ -19,13 +19,12 @@ class Citation(BaseModel):
     
 class Finding(BaseModel):
     claim: str
-    reasoning: Optional[str] = None
+    #support: Optional[str] = None
     citations: List[Citation]
     
 
 class sectionOutput(BaseModel):
     """LLM generation for section-wise answer"""
-    section: str
     findings: List[Finding]
 
 class final_answer(BaseModel):

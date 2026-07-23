@@ -62,27 +62,28 @@ def querydecomposer(query):
         response.choices[0].message.content)
     
 
-def generate_llm_findings(user_query, context, section, company, section_prompt):
-
+def generate_llm_findings(user_query, context, company, section_prompt):
+    
+    #for debugging
+    for i, doc in enumerate(context):
+        print(i, len(doc.page_content.split()))
+        
     context_json = json.dumps(context, indent=2)
    
     with llm_semaphore:
         response = invoke_llm(
             model = MODEL1,
-            max_completion_tokens=1024,
             temperature=0.1,
+            max_completion_tokens=1500,
             messages=[
                 {"role":"system",
                 "content": SYSTEM_PROMPT1},
                 {"role":"user",
                 "content": f"""
                 {section_prompt} 
-
+    
                 User Question:
                 {user_query}
-
-                Topic:
-                {section}
 
                 Company:
                 {company}
