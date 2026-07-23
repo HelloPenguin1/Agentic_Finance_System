@@ -1,4 +1,4 @@
-import json
+import time, random, json, logging
 from dotenv import load_dotenv
 load_dotenv()
 from threading import Semaphore
@@ -8,12 +8,12 @@ from prompts.query_prompt import query_prompt
 from prompts.system_prompt import SYSTEM_PROMPT1, SYSTEM_PROMPT2
 from langsmith import traceable
 from sentence_transformers import CrossEncoder
-import logging
 from langchain_huggingface import HuggingFaceEmbeddings
+from litellm.exceptions import RateLimitError
 
-
+MAX_RETRIES = 5
 MODEL1 = "groq/openai/gpt-oss-20b"
-MODEL2 = "groq/llama-3.3-70b-versatile"
+MODEL2 = "groq/openai/gpt-oss-120b"
 RERANKER_MDOEL = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2",trust_remote_code=True,)
 
 EMBEDDING_MODEL = HuggingFaceEmbeddings(
@@ -28,10 +28,26 @@ logger = logging.getLogger(__name__)
 llm_semaphore = Semaphore(2)
 
 
-@traceable(run_type='llm')
+@traceable(run_type="llm")
 def invoke_llm(**kwargs):
-    response = completion(**kwargs)
-    return response
+    for attempt in range(MAX_RETRIES):
+        try:
+            return completion(**kwargs)
+
+        except RateLimitError:
+            if attempt == MAX_RETRIES - 1:
+                raise
+
+            delay = (2 ** attempt) + random.uniform(0, 0.5)
+
+            print(
+                f"Rate limit reached. "
+                f"Retry {attempt + 1}/{MAX_RETRIES} in {delay:.2f}s..."
+            )
+
+            time.sleep(delay)
+            
+            
 
 def querydecomposer(query):
     response = invoke_llm(

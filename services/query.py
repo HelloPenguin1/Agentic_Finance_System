@@ -25,4 +25,9 @@ def answer_query(query: str) -> dict[str, Any]:
     if not answer:
         return {"answer": "No relevant disclosures were found.", "citations": []}
 
-    return {"answer": answer, "citations": citations or []}
+    return {"answer": answer, 
+            "citations": citations or []}
+
+
+
+### REMOVED THIS 

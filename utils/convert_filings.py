@@ -43,6 +43,9 @@ def filings_to_langchain_docs(filings, ticker):
                     if len(text) < 40:
                         continue
 
+                    if len(text.split()) < 25:
+                        continue
+                    
                     # Skip duplicate chunks already seen in this filing
                     if text in seen_chunks:
                         continue

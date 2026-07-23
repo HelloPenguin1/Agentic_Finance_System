@@ -27,7 +27,7 @@ Requirements:
 - Preserve all factual information.
 - Do not introduce information that is not present in the findings.
 - Present the response in clear prose.
-- Include citations at the end of the response.
+- Include citations at the end of the response. DO NOT DUPLICATE CITATIONS. Citations must be unique
 
 The filing may not explicitly answer every user question. 
 When this occurs, summarize the disclosures that are most relevant to answering the question instead of requiring an exact textual match.

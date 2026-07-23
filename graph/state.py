@@ -17,7 +17,7 @@ class Citation(TypedDict):
 
 class Finding(TypedDict):
     claim: str
-    explanation: Optional[str] = None
+    reasoning: Optional[str] = None   #changed from explanation
     citations: List[Citation]
 
 class SectionOutput(TypedDict): 

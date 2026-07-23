@@ -19,7 +19,7 @@ class Citation(BaseModel):
     
 class Finding(BaseModel):
     claim: str
-    explanation: Optional[str] = None
+    reasoning: Optional[str] = None
     citations: List[Citation]
     
 
