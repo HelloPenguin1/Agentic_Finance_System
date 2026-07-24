@@ -22,6 +22,6 @@ RUN uv sync --frozen
 #copy the rest of the project
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]

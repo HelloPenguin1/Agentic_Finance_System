@@ -11,6 +11,7 @@ from sentence_transformers import CrossEncoder
 from langchain_huggingface import HuggingFaceEmbeddings
 from litellm.exceptions import RateLimitError
 
+
 MAX_RETRIES = 5
 MODEL1 = "groq/openai/gpt-oss-20b"
 MODEL2 = "groq/openai/gpt-oss-120b"
