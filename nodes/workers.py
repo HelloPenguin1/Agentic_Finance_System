@@ -113,6 +113,13 @@ class WorkerAgent:
 
     def retrieve(self, state):
         #Retrieval Generation
+        logger.info(
+        f"Collection count before retrieval: "
+        f"{self.vectorstore._collection.count()}"
+        )
+
+        logger.info(f"Retrieval query: {self.retrieval_query}")
+        logger.info(f"Filter: {self.build_filter()}")
         retriever = self.vectorstore.as_retriever(
             search_kwargs={
                 "k": self.k,

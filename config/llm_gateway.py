@@ -11,7 +11,6 @@ from sentence_transformers import CrossEncoder
 from langchain_huggingface import HuggingFaceEmbeddings
 from litellm.exceptions import RateLimitError
 import litellm
-litellm._turn_on_debug()
 
 MAX_RETRIES = 5
 MODEL1 = "groq/openai/gpt-oss-20b"
@@ -71,8 +70,7 @@ def generate_llm_findings(user_query, context, company, section_prompt):
     with llm_semaphore:
         response = invoke_llm(
             model = MODEL1,
-            temperature=0.1,
-            max_completion_tokens=1500,
+            temperature=0.01,
             messages=[
                 {"role":"system",
                 "content": SYSTEM_PROMPT1},
