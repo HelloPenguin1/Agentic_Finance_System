@@ -179,7 +179,8 @@ def run_worker(worker_name: str, state):
         "retrieved_docs": context,
         "completed_sections": [
             {
-                "findings": output.findings, #internally contains citations and claims
+                #"findings": output.findings, #internally contains citations and claims
+                'findings':[f.model_dump() for f in output.findings]
             }
         ],
     }

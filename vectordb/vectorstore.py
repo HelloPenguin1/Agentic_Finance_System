@@ -30,11 +30,12 @@ def get_vectorstore():
     )
 
 def vectordb_store(vectordb, chunks):
-    logger.info(f"Preparing to insert {total_chunks} chunks")
+    
     
     # Convert chunks to a list once to enable slicing and accurate sizing
     chunks_list = list(chunks)
     total_chunks = len(chunks_list)
+    logger.info(f"Preparing to insert {total_chunks} chunks")
     
     for i, batch in enumerate(batched(chunks_list, BATCH_SIZE)):
         batch_list = list(batch)

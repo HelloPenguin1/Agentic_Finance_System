@@ -10,7 +10,8 @@ from langsmith import traceable
 from sentence_transformers import CrossEncoder
 from langchain_huggingface import HuggingFaceEmbeddings
 from litellm.exceptions import RateLimitError
-
+import litellm
+litellm._turn_on_debug()
 
 MAX_RETRIES = 5
 MODEL1 = "groq/openai/gpt-oss-20b"
@@ -96,7 +97,7 @@ def generate_llm_findings(user_query, context, company, section_prompt):
 def aggregate_findings(user_query, completed_sections):
     response = invoke_llm(
         model = MODEL2,
-        temperature = 0.3,
+        temperature = 0.01,
         messages = [
             {'role': 'system',
                 "content": SYSTEM_PROMPT2 },
@@ -108,7 +109,6 @@ def aggregate_findings(user_query, completed_sections):
                 Agent outputs:
                 {completed_sections}
                 
-                Your complete response:
                 """}],
         response_format = final_answer
     )
