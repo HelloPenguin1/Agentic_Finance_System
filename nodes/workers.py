@@ -10,6 +10,11 @@ from prompts.worker_prompts2 import (
 from prompts.specific_prompt import SPECIFIC_PROMPT
 from utils.reranker import build_context, rerank_documents
 
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
 WORKER_CONFIG = {
     "revenue_agent": {
         "k": 20,
@@ -116,18 +121,31 @@ class WorkerAgent:
         )
 
         docs = retriever.invoke(self.retrieval_query)  #pass the retrieval query here to get the documents 
+        
+        #DEBUG STATEMENT
+        logger.info(f"Retriever returned {len(docs)} docs")
 
+        for doc in docs[:3]:
+            logger.info(doc.metadata)
+        #END DEBUG STATEMENT
+    
         docs = rerank_documents(
             query = self.retrieval_query,
             docs = docs,
             top_k = 5
         )
+        logger.info(f"After reranking: {len(docs)} docs")
+        
         context = build_context(docs)        
+        logger.info(f"Context length: {len(context)}")
         
         return context
 
     def generate_findings(self, context, state):
         #Generation only
+        logger.info("Sending context to LLM")
+        logger.info(context[:1000])
+        
         output = generate_llm_findings(
             user_query=state["messages"][-1].content,
             context=context,

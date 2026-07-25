@@ -22,13 +22,34 @@ class ConstructDB:
         logger.info('Found company')
 
         filings = self.fetch_filing(ticker, filing_year)
-        logger.info('Fetched filings')
+        
+        #DEBUG STATEMENT
+        logger.info(f'Fetched {len(filings)} filings')
+        if filings:
+            logger.info(f"First filing: {filings[0].form} {filings[0].filing_date}")
+        else:
+            logger.warning("No filings fetched")
+        #END DEBUG STATEMENT
         
         chunks = self.chunk_document(filings, ticker)
-        logger.info('Chunked Documents')
+
+        #DEBUG STATEMENT
+        logger.info(f"Created {len(chunks)} chunks")
+        if chunks:
+            logger.info(f"Sample metadata: {chunks[0].metadata}")
+        #END DEBUG STATEMENT
         
         vectordb = get_vectorstore()
         self.index_chunks(vectordb, chunks)
+        
+        #DEBUG STATEMENT TO CHECK PERSISTANCE
+        vectordb = get_vectorstore()
+        logger.info(
+            f"Collection count after reopening: "
+            f"{vectordb._collection.count()}"
+        )
+        #END DEBUG STATEMENT
+        
         logger.info('Indexing chunks')
 
         return len(chunks)

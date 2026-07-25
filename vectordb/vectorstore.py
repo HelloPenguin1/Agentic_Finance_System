@@ -6,11 +6,18 @@ from itertools import batched
 from utils.gen_unique_ids import generate_unique_ids
 import logging
 import gc
+import os
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-_PERSIST_DIR = Path(__file__).resolve().parent.parent / "chroma_db"
+
+if os.getenv("K_SERVICE"):  # Running on Cloud Run
+    _PERSIST_DIR = Path("/tmp/chroma_db")
+else:  # Running locally
+    _PERSIST_DIR = Path(__file__).resolve().parent.parent / "chroma_db"
+    
+    
 _PERSIST_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -23,7 +30,7 @@ def get_vectorstore():
     )
 
 def vectordb_store(vectordb, chunks):
-    logger.info("Starting bulk insertion of document chunks into vectorstore...")
+    logger.info(f"Preparing to insert {total_chunks} chunks")
     
     # Convert chunks to a list once to enable slicing and accurate sizing
     chunks_list = list(chunks)
@@ -39,9 +46,16 @@ def vectordb_store(vectordb, chunks):
             documents=batch_list,
             ids=batch_ids
         )
+        logger.info(f"Batch {i+1} inserted successfully")
+        
         
         processed_count = min((i + 1) * BATCH_SIZE, total_chunks)
         logger.info(f"Indexed batch {i + 1} ({processed_count}/{total_chunks} chunks)")
+    
+    #DEBUG STATEMENT
+    count = vectordb._collection.count()
+    logger.info(f"Collection now contains {count} documents")
+    #END DEBUG STATEMENT
 
 def clear_vectorstore():
     gc.collect()
