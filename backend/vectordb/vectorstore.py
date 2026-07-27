@@ -31,7 +31,6 @@ def get_vectorstore():
 
 def vectordb_store(vectordb, chunks):
     
-    
     # Convert chunks to a list once to enable slicing and accurate sizing
     chunks_list = list(chunks)
     total_chunks = len(chunks_list)
