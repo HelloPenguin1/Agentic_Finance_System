@@ -3,8 +3,10 @@
 import os
 import requests
 import streamlit as st
+from dotenv import load_dotenv
+load_dotenv()
 
-BACKEND_URL = "https://fin-agentic-assistant-370180169657.asia-south1.run.app"
+BACKEND_URL = os.environ.get("BACKEND_URL").rstrip("/")
 TIMEOUT = 300
 
 
@@ -13,9 +15,15 @@ TIMEOUT = 300
 # ---------------------------------------------------------------------------
 
 st.set_page_config(
-    page_title="Agentic SEC Filing Analysis Assistant",
-    page_icon="📄",
+    page_title="Agentic Financial Research Assistant",
+    page_icon="📈",
     layout="centered",
+)
+
+# Times New Roman font via a single scoped style injection
+st.markdown(
+    "<style>html, body, [class*='css'] { font-family: 'Times New Roman', Times, serif; }</style>",
+    unsafe_allow_html=True,
 )
 
 if "chat_history" not in st.session_state:
@@ -43,7 +51,41 @@ with st.sidebar:
     st.caption(f"**Backend URL:** `{BACKEND_URL}`")
     st.divider()
 
-    # Clear vector database
+    # About SEC filings
+    st.markdown(
+        """
+        **About SEC Filings**
+
+        SEC filings are official financial and regulatory reports that public companies
+        submit to the U.S. Securities and Exchange Commission (SEC).
+        """
+    )
+    st.divider()
+
+    # Endpoint descriptions
+    st.markdown("**Endpoint Reference**")
+
+    with st.expander("Ingest Filings"):
+        st.write(
+            "Retrieves SEC filings for the selected company, splits them into chunks, "
+            "generates embeddings, and stores them in the vector database for semantic search."
+        )
+
+    with st.expander("Query"):
+        st.write(
+            "Searches the vector database for relevant filing sections and uses multiple retrieval"
+            "agents as needed to generate evidence-based answers grounded in SEC documents."
+        )
+
+    with st.expander("Clear Vector Database"):
+        st.write(
+            "Deletes all indexed filing embeddings from the vector database, "
+            "allowing a fresh ingestion of new documents."
+        )
+
+    st.divider()
+
+    # Clear vector database action
     st.subheader("Vector Database")
     if st.button("🗑️ Clear Vector Database", use_container_width=True):
         st.session_state.confirm_clear = True
@@ -68,7 +110,15 @@ with st.sidebar:
 # Main
 # ---------------------------------------------------------------------------
 
-st.title("Agentic SEC Filing Analysis Assistant")
+st.title("Agentic Financial Research Assistant")
+st.markdown(
+    """
+    A multi-agent orchestrated financial research platform built on Retrieval-Augmented Generation (RAG). \
+        The system ingests SEC EDGAR filings, constructs a semantic vector index, decomposes user queries, 
+        dynamically routes tasks to specialized financial agents, and synthesizes evidence-backed analyses 
+        with traceable citations.
+    """
+)
 st.divider()
 
 
@@ -86,15 +136,11 @@ if submitted:
     else:
         with st.spinner(f"Ingesting filings for **{company.strip()}** ({int(filing_year)})…"):
             try:
-                st.write("Calling:", f"{BACKEND_URL}/ingest")
                 resp = requests.post(
                     f"{BACKEND_URL}/ingest",
-                    json={"company": company.strip(), 
-                          "filing_year": int(filing_year)},
+                    json={"company": company.strip(), "filing_year": int(filing_year)},
                     timeout=TIMEOUT,
                 )
-                st.write(resp.status_code)
-                st.write(resp.text)
                 resp.raise_for_status()
                 data = resp.json()
                 st.success(f"✅ {data.get('message', 'Ingestion completed.')}")
