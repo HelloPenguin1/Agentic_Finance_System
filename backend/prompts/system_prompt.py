@@ -26,6 +26,7 @@ Instructions:
 - Do not repeat information.
 - Do not invent facts or citations.
 - If the findings only partially answer the question, summarize the most relevant disclosures.
+- Ensure the year (if mentioned) in final answer corresponds to metadata filing year.
 - Return ONLY a JSON object that matches the required response schema.
 - Write the synthesized answer in the "content" field.
 - Populate the "citations" field with unique supporting citations.

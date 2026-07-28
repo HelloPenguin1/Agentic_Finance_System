@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 from langchain_chroma import Chroma
 from config.llm_gateway import EMBEDDING_MODEL
@@ -24,6 +23,11 @@ _PERSIST_DIR.mkdir(parents=True, exist_ok=True)
 BATCH_SIZE = 350  
 
 def get_vectorstore():
+    _PERSIST_DIR.mkdir(parents=True, exist_ok=True)
+    logger.info(f"K_SERVICE = {os.getenv('K_SERVICE')}")
+    logger.info(f"PERSIST_DIR = {_PERSIST_DIR}")
+    logger.info(f"Exists = {_PERSIST_DIR.exists()}")
+    logger.info(f"Writable = {os.access(_PERSIST_DIR, os.W_OK)}")
     return Chroma(
         embedding_function=EMBEDDING_MODEL,
         persist_directory=str(_PERSIST_DIR),
@@ -59,9 +63,10 @@ def vectordb_store(vectordb, chunks):
 
 def clear_vectorstore():
     gc.collect()
-
-    if _PERSIST_DIR.exists():
-        shutil.rmtree(_PERSIST_DIR)
+    
+    vectordb = get_vectorstore()
+    vectordb.reset_collection()
+            
     logger.info('Vectorstore successfully cleared.')
 
     return "Vectorstore cleared successfully."
