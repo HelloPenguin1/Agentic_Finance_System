@@ -110,10 +110,10 @@ with st.sidebar:
 # Main
 # ---------------------------------------------------------------------------
 
-st.title("Agentic Financial Research Assistant")
+st.title("Multi-Agent Financial Intelligence Platform")
 st.markdown(
     """
-    A multi-agent orchestrated financial research platform built on Retrieval-Augmented Generation (RAG). \
+    An end-to-end, multi-agent orchestrated financial research platform built on Retrieval-Augmented Generation (RAG). \
         The system ingests SEC EDGAR filings, constructs a semantic vector index, decomposes user queries, 
         dynamically routes tasks to specialized financial agents, and synthesizes evidence-backed analyses 
         with traceable citations.
@@ -126,7 +126,7 @@ st.divider()
 st.header("1. Ingest SEC Filings")
 
 with st.form("ingest_form"):
-    company = st.text_input("Company Name", placeholder="e.g. Apple Inc.")
+    company = st.text_input("Company Name", placeholder="e.g. Apple Inc or apple")
     filing_year = st.number_input("Filing Year", min_value=1993, max_value=2100, value=2023, step=1, format="%d")
     submitted = st.form_submit_button("Ingest Filings", use_container_width=True)
 
@@ -154,6 +154,7 @@ st.divider()
 
 # Section 2 — Ask Questions
 st.header("2. Ask Questions")
+st.markdown("Mention company name in your query.")
 
 # Render chat history
 for turn in st.session_state.chat_history:
