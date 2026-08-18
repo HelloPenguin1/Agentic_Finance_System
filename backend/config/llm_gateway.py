@@ -2,7 +2,7 @@ import time, random, json, logging
 from dotenv import load_dotenv
 load_dotenv()
 from threading import Semaphore
-from litellm import completion
+from litellm import acompletion
 from output_val.structured_outputs import queryDecompose, sectionOutput, final_answer
 from prompts.query_prompt import query_prompt
 from prompts.system_prompt import SYSTEM_PROMPT1, SYSTEM_PROMPT2
@@ -11,6 +11,7 @@ from sentence_transformers import CrossEncoder
 from langchain_huggingface import HuggingFaceEmbeddings
 from litellm.exceptions import RateLimitError
 import litellm
+import asyncio
 
 MAX_RETRIES = 5
 MODEL1 = "groq/openai/gpt-oss-20b"
@@ -26,14 +27,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 logger = logging.getLogger(__name__)
-llm_semaphore = Semaphore(2)
+llm_semaphore = asyncio.Semaphore(2)
 
 
 @traceable(run_type="llm")
-def invoke_llm(**kwargs):
+async def invoke_llm(**kwargs):
     for attempt in range(MAX_RETRIES):
         try:
-            return completion(**kwargs)
+            return await acompletion(**kwargs)
 
         except RateLimitError:
             if attempt == MAX_RETRIES - 1:
@@ -46,12 +47,12 @@ def invoke_llm(**kwargs):
                 f"Retry {attempt + 1}/{MAX_RETRIES} in {delay:.2f}s..."
             )
 
-            time.sleep(delay)
+            await asyncio.sleep(delay)
             
             
 
-def querydecomposer(query):
-    response = invoke_llm(
+async def querydecomposer(query):
+    response = await invoke_llm(
     model = MODEL1,
     temperature=0.1,
     messages=[
@@ -63,12 +64,12 @@ def querydecomposer(query):
         response.choices[0].message.content)
     
 
-def generate_llm_findings(user_query, context, company, section_prompt):
+async def generate_llm_findings(user_query, context, company, section_prompt):
         
     context_json = json.dumps(context, indent=2)
    
-    with llm_semaphore:
-        response = invoke_llm(
+    async with llm_semaphore:
+        response = await invoke_llm(
             model = MODEL1,
             temperature=0.01,
             messages=[
@@ -92,8 +93,8 @@ def generate_llm_findings(user_query, context, company, section_prompt):
         return sectionOutput.model_validate_json(response.choices[0].message.content)
     
     
-def aggregate_findings(user_query, completed_sections):
-    response = invoke_llm(
+async def aggregate_findings(user_query, completed_sections):
+    response = await invoke_llm(
         model = MODEL2,
         temperature = 0.01,
         messages = [

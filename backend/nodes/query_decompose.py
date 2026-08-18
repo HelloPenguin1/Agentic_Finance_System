@@ -3,10 +3,10 @@ from config.llm_gateway import querydecomposer
 from utils.resolve_c import resolve_company
 
 
-def QueryDecompose(state: GraphState):
+async def QueryDecompose(state: GraphState):
     """This node takes a user query and extracts entity infomration"""
     latest_query = state['messages'][-1].content  
-    output = querydecomposer(latest_query)
+    output = await querydecomposer(latest_query)
 
     
     return {

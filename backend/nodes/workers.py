@@ -148,12 +148,12 @@ class WorkerAgent:
         
         return context
 
-    def generate_findings(self, context, state):
+    async def generate_findings(self, context, state):
         #Generation only
         logger.info("Sending context to LLM")
         logger.info(context[:1000])
         
-        output = generate_llm_findings(
+        output = await generate_llm_findings(
             user_query=state["messages"][-1].content,
             context=context,
             company=self.company,
@@ -163,7 +163,7 @@ class WorkerAgent:
         return output
 
 
-def run_worker(worker_name: str, state):
+async def run_worker(worker_name: str, state):
     config = WORKER_CONFIG[worker_name]
     
     if state['intent']=='report':
@@ -179,7 +179,7 @@ def run_worker(worker_name: str, state):
 
     context = agent.retrieve(state)
     
-    output = agent.generate_findings(context, state)
+    output = await agent.generate_findings(context, state)
     
 
     return {
@@ -193,21 +193,21 @@ def run_worker(worker_name: str, state):
     }
 
 
-def revenue_agent(state):
-    return run_worker("revenue_agent", state)
+async def revenue_agent(state):
+    return await run_worker("revenue_agent", state)
 
 
-def profitability_agent(state):
-    return run_worker("profitability_agent", state)
+async def profitability_agent(state):
+    return await run_worker("profitability_agent", state)
 
 
-def liquidity_agent(state):
-    return run_worker("liquidity_agent", state)
+async def liquidity_agent(state):
+    return await run_worker("liquidity_agent", state)
 
 
-def risk_agent(state):
-    return run_worker("risk_agent",state)
+async def risk_agent(state):
+    return await run_worker("risk_agent",state)
 
 
-def management_agent(state):
-    return run_worker("management_agent", state)
+async def management_agent(state):
+    return await run_worker("management_agent", state)

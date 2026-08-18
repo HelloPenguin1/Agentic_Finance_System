@@ -75,11 +75,11 @@ def clear_vectorstore_endpoint() -> dict[str, str]:
     """Remove the stored vector database contents."""
     return {"message": clear_vectorstore()}
 
-
+# async
 @app.post("/query", response_model=AnalyzeResponse)
-def query_filings(request: QueryRequest) -> AnalyzeResponse:
+async def query_filings(request: QueryRequest) -> AnalyzeResponse:
     """Answer a question using previously ingested SEC filing chunks."""
-    result = workflow.invoke({"messages":[HumanMessage(content=request.query)]})
+    result = await workflow.invoke({"messages":[HumanMessage(content=request.query)]})
     final_response: Any = result.get("final_response")
     if not final_response:
         return {"answer": "No relevant disclosures were found.", "citations": []}
