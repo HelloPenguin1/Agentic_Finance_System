@@ -11,7 +11,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from output_val.structured_outputs import Citation  
+from output_val.structured_outputs import Citation
 from vectordb.vectorstore import clear_vectorstore
 from nodes.constructDB import ConstructDB
 
@@ -75,23 +75,23 @@ def clear_vectorstore_endpoint() -> dict[str, str]:
     """Remove the stored vector database contents."""
     return {"message": clear_vectorstore()}
 
+
 # async
 @app.post("/query", response_model=AnalyzeResponse)
 async def query_filings(request: QueryRequest) -> AnalyzeResponse:
     """Answer a question using previously ingested SEC filing chunks."""
-    result = await workflow.invoke({"messages":[HumanMessage(content=request.query)]})
+    result = await workflow.invoke({"messages": [HumanMessage(content=request.query)]})
     final_response: Any = result.get("final_response")
     if not final_response:
         return {"answer": "No relevant disclosures were found.", "citations": []}
-    
+
     answer = final_response.get("content", "")
-    citations = final_response.get("citations",[])
-    
+    citations = final_response.get("citations", [])
+
     if not answer:
         return {"answer": "No relevant disclosures were found.", "citations": []}
 
-    return {"answer": answer, 
-            "citations": citations or []}
+    return {"answer": answer, "citations": citations or []}
 
 
 @app.post("/ingest", response_model=IngestResponse)
@@ -100,7 +100,9 @@ def ingest_filings(request: IngestRequest) -> IngestResponse:
     filing_year = request.filing_year or request.filing_start_year
 
     if filing_year is None:
-        raise HTTPException(status_code=400, detail="Provide filing_year or filing_start_year.")
+        raise HTTPException(
+            status_code=400, detail="Provide filing_year or filing_start_year."
+        )
 
     chunk_count = construct_db.build_vectordb(
         company=request.company,

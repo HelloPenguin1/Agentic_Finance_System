@@ -47,7 +47,7 @@ def split_large_chunk(
     step = max_words - overlap
 
     for start in range(0, len(words), step):
-        sub_words = words[start:start + max_words]
+        sub_words = words[start : start + max_words]
 
         if not sub_words:
             break
@@ -79,9 +79,11 @@ def _make_metadata(ticker, filing, part, item):
         "filing_date": str(filing.filing_date),
         "filing_year": filing.filing_date.year,
         "accession_number": filing.accession_number,
-        "part": part,                                  # None for 10-K, "Part I"/"Part II" for 10-Q
-        "item": item,                                   # e.g. "Item 2"
-        "section": f"{part}, {item}" if part else item,  # combined label, matches WORKER_CONFIG strings
+        "part": part,  # None for 10-K, "Part I"/"Part II" for 10-Q
+        "item": item,  # e.g. "Item 2"
+        "section": f"{part}, {item}"
+        if part
+        else item,  # combined label, matches WORKER_CONFIG strings
         "source": "SEC",
     }
 

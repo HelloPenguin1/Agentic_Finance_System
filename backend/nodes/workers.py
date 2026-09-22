@@ -18,7 +18,6 @@ logging.basicConfig(level=logging.INFO)
 WORKER_CONFIG = {
     "revenue_agent": {
         "k": 20,
-        
         "forms": ["10-K", "10-Q"],
         "sections": [
             "Item 7",
@@ -27,10 +26,8 @@ WORKER_CONFIG = {
             "Part I, Item 1",
         ],
     },
-
     "profitability_agent": {
         "k": 20,
-        
         "forms": ["10-K", "10-Q"],
         "sections": [
             "Item 7",
@@ -39,11 +36,8 @@ WORKER_CONFIG = {
             "Part I, Item 1",
         ],
     },
-
     "liquidity_agent": {
         "k": 20,
-        
-        
         "forms": ["10-K", "10-Q"],
         "sections": [
             "Item 7",
@@ -52,11 +46,9 @@ WORKER_CONFIG = {
             "Part I, Item 1",
         ],
     },
-
     "risk_agent": {
         "k": 20,
         "forms": ["10-K", "10-Q"],
-        
         "sections": [
             "Item 1A",
             "Item 3",
@@ -64,11 +56,9 @@ WORKER_CONFIG = {
             "Part II, Item 1",
         ],
     },
-
     "management_agent": {
         "k": 20,
         "forms": ["10-K", "10-Q"],
-        
         "sections": [
             "Item 7",
             "Part I, Item 2",
@@ -84,13 +74,14 @@ REPORT_PROMPTS = {
     "management_agent": management_prompt,
 }
 
+
 class WorkerAgent:
     def __init__(self, config, prompt, state):
         self.vectorstore = get_vectorstore()
 
-        self.retrieval_query = state["optimized_query"]  #retriever only sees this
-        
-        #Arguments for retriever/build filter
+        self.retrieval_query = state["optimized_query"]  # retriever only sees this
+
+        # Arguments for retriever/build filter
         self.k = config["k"]
         self.forms = config["forms"]
         self.sections = config["sections"]
@@ -100,7 +91,7 @@ class WorkerAgent:
         # for metadata filtering here to avoid mismatches after ingestion.
         self.prompt = prompt
         self.company = state["company"]
-        
+
     def build_filter(self):
         return {
             "$and": [
@@ -112,10 +103,9 @@ class WorkerAgent:
         }
 
     def retrieve(self, state):
-        #Retrieval Generation
+        # Retrieval Generation
         logger.info(
-        f"Collection count before retrieval: "
-        f"{self.vectorstore._collection.count()}"
+            f"Collection count before retrieval: {self.vectorstore._collection.count()}"
         )
 
         logger.info(f"Retrieval query: {self.retrieval_query}")
@@ -123,36 +113,34 @@ class WorkerAgent:
         retriever = self.vectorstore.as_retriever(
             search_kwargs={
                 "k": self.k,
-                "filter": self.build_filter(), #for metadata filtering
+                "filter": self.build_filter(),  # for metadata filtering
             }
         )
 
-        docs = retriever.invoke(self.retrieval_query)  #pass the retrieval query here to get the documents 
-        
-        #DEBUG STATEMENT
+        docs = retriever.invoke(
+            self.retrieval_query
+        )  # pass the retrieval query here to get the documents
+
+        # DEBUG STATEMENT
         logger.info(f"Retriever returned {len(docs)} docs")
 
         for doc in docs[:3]:
             logger.info(doc.metadata)
-        #END DEBUG STATEMENT
-    
-        docs = rerank_documents(
-            query = self.retrieval_query,
-            docs = docs,
-            top_k = 5
-        )
+        # END DEBUG STATEMENT
+
+        docs = rerank_documents(query=self.retrieval_query, docs=docs, top_k=5)
         logger.info(f"After reranking: {len(docs)} docs")
-        
-        context = build_context(docs)        
+
+        context = build_context(docs)
         logger.info(f"Context length: {len(context)}")
-        
+
         return context
 
     async def generate_findings(self, context, state):
-        #Generation only
+        # Generation only
         logger.info("Sending context to LLM")
         logger.info(context[:1000])
-        
+
         output = await generate_llm_findings(
             user_query=state["messages"][-1].content,
             context=context,
@@ -165,29 +153,28 @@ class WorkerAgent:
 
 async def run_worker(worker_name: str, state):
     config = WORKER_CONFIG[worker_name]
-    
-    if state['intent']=='report':
-        prompt = REPORT_PROMPTS[worker_name]  #return base answers 
+
+    if state["intent"] == "report":
+        prompt = REPORT_PROMPTS[worker_name]  # return base answers
     else:
         prompt = SPECIFIC_PROMPT
-        
+
     agent = WorkerAgent(
-        config=config, #sets up filters for k-values and sections to retrieve
-        prompt=prompt, 
+        config=config,  # sets up filters for k-values and sections to retrieve
+        prompt=prompt,
         state=state,
     )
 
     context = agent.retrieve(state)
-    
+
     output = await agent.generate_findings(context, state)
-    
 
     return {
         "retrieved_docs": context,
         "completed_sections": [
             {
-                #"findings": output.findings, #internally contains citations and claims
-                'findings':[f.model_dump() for f in output.findings]
+                # "findings": output.findings, #internally contains citations and claims
+                "findings": [f.model_dump() for f in output.findings]
             }
         ],
     }
@@ -206,7 +193,7 @@ async def liquidity_agent(state):
 
 
 async def risk_agent(state):
-    return await run_worker("risk_agent",state)
+    return await run_worker("risk_agent", state)
 
 
 async def management_agent(state):

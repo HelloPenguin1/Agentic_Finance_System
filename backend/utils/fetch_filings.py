@@ -1,16 +1,16 @@
 from edgar import *
 from edgar import Company, set_identity
 
+
 class FilingFetcher:
     def __init__(self):
         set_identity("dev@gmail.com")
-
 
     def fetch_filings(
         self,
         ticker: str,
         start_year: int,
-        form_types: list[str] = ['10-K', '10-Q', '8-K'],
+        form_types: list[str] = ["10-K", "10-Q", "8-K"],
         end_year: int | None = None,
     ):
         """
@@ -24,21 +24,14 @@ class FilingFetcher:
 
         date_range = f"{start}:{end}"
 
-        filings = company.get_filings(
-            form=form_types,
-            date=date_range
-        )
+        filings = company.get_filings(form=form_types, date=date_range)
 
         return filings
-        #return date_range
+        # return date_range
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     fetcher = FilingFetcher()
-    filings = fetcher.fetch_filings(ticker= 'AAPL',
-                                    start_year=2022)
-                                
-    
+    filings = fetcher.fetch_filings(ticker="AAPL", start_year=2022)
+
     print(filings)
-    
-    

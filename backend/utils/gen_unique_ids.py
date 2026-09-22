@@ -1,7 +1,7 @@
 import hashlib
 
 
-#new strat for unique ids
+# new strat for unique ids
 def generate_unique_ids(doc):
     metadata = doc.metadata
 

@@ -22,7 +22,7 @@ Rules:
 ############################################################
 
 
-revenue_prompt = f"""
+revenue_prompt = """
 Extract the most material Revenue findings.
 
 Focus on:
@@ -59,7 +59,7 @@ Requirements:
 
 ############################################################
 
-profitability_prompt = f"""
+profitability_prompt = """
 Extract the most material Profitability findings.
 
 Focus on:
@@ -94,7 +94,7 @@ Requirements:
 
 ############################################################
 
-liquidity_prompt = f"""
+liquidity_prompt = """
 Extract the most material Liquidity and Cash Flow findings.
 
 Focus on:
@@ -130,7 +130,7 @@ Requirements:
 
 ############################################################
 
-risk_prompt = f"""
+risk_prompt = """
 Extract the most material Risk findings.
 
 Focus on:
@@ -165,7 +165,7 @@ Requirements:
 
 ############################################################
 
-management_prompt = f"""
+management_prompt = """
 Extract the most material Management findings.
 
 Focus on:

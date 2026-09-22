@@ -38,7 +38,7 @@ def split_large_chunk(
     step = max_words - overlap
 
     for start in range(0, len(words), step):
-        sub_words = words[start:start + max_words]
+        sub_words = words[start : start + max_words]
 
         if not sub_words:
             break
@@ -90,7 +90,6 @@ def filings_to_langchain_docs(filings, ticker):
                 item_chunks = chunk_doc.chunks_for_item(item)
 
                 for chunk in item_chunks:
-
                     if isinstance(chunk, str):
                         text = chunk
                     else:

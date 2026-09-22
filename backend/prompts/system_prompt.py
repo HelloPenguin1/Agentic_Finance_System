@@ -1,4 +1,3 @@
-
 SYSTEM_PROMPT1 = """
 You are an information extraction system for SEC filings.
 

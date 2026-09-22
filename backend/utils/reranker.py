@@ -1,6 +1,7 @@
 from langchain_core.documents import Document
 from config.llm_gateway import RERANKER_MDOEL
 
+
 def rerank_documents(query: str, docs: list[Document], top_k: int = 5):
     """
     Rerank retrieved LangChain Documents.
@@ -45,7 +46,6 @@ def build_context(docs: list[Document]) -> str:
     return context
 
 
-
 if __name__ == "__main__":
     sample_query = "What were Apple's revenue trends in 2024?"
     sample_docs = [
@@ -69,4 +69,4 @@ if __name__ == "__main__":
     print("Top ranked documents:")
     for idx, doc in enumerate(ranked_docs, start=1):
         print(f"{idx}. {doc.page_content}")
-        print(f"   Metadata: {doc.metadata}")       
+        print(f"   Metadata: {doc.metadata}")

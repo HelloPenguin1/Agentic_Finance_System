@@ -1,4 +1,3 @@
-
 query_prompt = """
 You are a financial query planning agent for an SEC filing retrieval system.
 

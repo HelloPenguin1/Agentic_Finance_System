@@ -3,7 +3,7 @@ from graph.state import GraphState
 
 
 WORKER_MAP = {
-    "revenue": "revenue_agent", #agents to be made
+    "revenue": "revenue_agent",  # agents to be made
     "profitability": "profitability_agent",
     "liquidity": "liquidity_agent",
     "risk": "risk_agent",
@@ -14,12 +14,10 @@ WORKER_MAP = {
 def assign_workers(state: GraphState):
 
     sends = []
-    
+
     for section in state["requested_sections"]:
         worker = WORKER_MAP.get(section)
-        
+
         if worker:
-            sends.append(
-                Send(worker, state)
-            )
+            sends.append(Send(worker, state))
     return sends

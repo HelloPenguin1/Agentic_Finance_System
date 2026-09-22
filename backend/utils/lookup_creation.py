@@ -2,10 +2,10 @@ import json
 from pathlib import Path
 
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "company_tickers.json"
-COMPANY_PATH = Path(__file__).resolve().parent.parent / "data" / "company_lookup.json" 
+COMPANY_PATH = Path(__file__).resolve().parent.parent / "data" / "company_lookup.json"
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     with open(OUTPUT_PATH, "r") as f:
         data = json.load(f)
 
@@ -33,18 +33,6 @@ if __name__=="__main__":
         ).strip()
 
         company_lookup[short] = ticker
-        
+
     with COMPANY_PATH.open("w", encoding="utf-8") as f:
-        json.dump(company_lookup, f, indent = 2)
-    
-   
-    
-        
-    
-    
-
-    
-    
-    
-    
-
+        json.dump(company_lookup, f, indent=2)
